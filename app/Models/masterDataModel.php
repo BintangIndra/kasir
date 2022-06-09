@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class masterDataModel extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'harga',
+        'nama',
+        'jenis',
+    ];
 }

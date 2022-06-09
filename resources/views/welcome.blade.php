@@ -15,7 +15,7 @@
             }
         </style>
     </head>
-    <body>
+    <body style="background-color:#04293A;color:aliceblue;">
     @guest
         <div class="container d-flex align-items-center justify-content-center" style="height: 100vh;">
             <div class="row h-25 w-50">
@@ -85,7 +85,7 @@
         <div class="modal-dialog modal-sm modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body d-flex justify-content-center">
-            Yakin Mau Logout
+            <p>Yakin Mau Logout</p>
             </div>
             <div class="modal-footer d-flex justify-content-center">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -96,7 +96,7 @@
     </div>
     
     <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-        <div class="offcanvas-header">
+        <div class="offcanvas-header" style="background-color:#04293A;">
             <h5 class="offcanvas-title" id="offcanvasExampleLabel">Menus</h5>
             <button type="button" data-bs-dismiss="offcanvas" aria-label="Close">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
@@ -104,13 +104,13 @@
                   </svg>
             </button>
         </div>
-        <div class="offcanvas-body">
+        <div class="offcanvas-body" style="background-color:#04293A;">
             <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                 <li class="nav-item">
                   <a class="nav-link active" aria-current="page" href="{{ route('welcome') }}">Home</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#">Link</a>
+                  <a class="nav-link" href="#">Master Data</a>
                 </li>
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

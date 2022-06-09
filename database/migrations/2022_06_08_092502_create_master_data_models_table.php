@@ -13,7 +13,7 @@ class CreateMasterDataModelsTable extends Migration
      */
     public function up()
     {
-        Schema::create('masterData', function (Blueprint $table) {
+        Schema::create('master_data_models', function (Blueprint $table) {
             $table->id();
             $table->integer('harga');
             $table->string('nama',25);

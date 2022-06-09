@@ -14,7 +14,7 @@ class MasterDataModelFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->name(),
+            'nama' => $this->faker->name(),
             'harga' => $this->faker->randomNumber(5, true),
             'jenis' => $this->faker->randomElement(['makanan', 'minuman'])
         ];

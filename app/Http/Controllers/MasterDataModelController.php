@@ -15,7 +15,7 @@ class MasterDataModelController extends Controller
      */
     public function index()
     {
-        //
+        return redirect()->route('welcome');
     }
 
     /**
@@ -34,7 +34,7 @@ class MasterDataModelController extends Controller
      * @param  \App\Http\Requests\StoremasterDataModelRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoremasterDataModelRequest $request)
+    public function store(Request $request)
     {
         //
     }
@@ -68,7 +68,7 @@ class MasterDataModelController extends Controller
      * @param  \App\Models\masterDataModel  $masterDataModel
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatemasterDataModelRequest $request, masterDataModel $masterDataModel)
+    public function update(masterDataModel $masterDataModel)
     {
         //
     }
