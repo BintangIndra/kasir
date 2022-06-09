@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\loginController;
+use App\Http\Controllers\MasterDataModelController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,4 +22,16 @@ Route::get('/', function () {
 Route::controller(loginController::class)->group(function () {
     Route::post('/login', 'login')->name('login');
     Route::get('/logout', 'logout')->name('logout');
+});
+
+Route::group([
+    'prefix' => 'masterData',
+    'as' => 'masterData.',
+    'controller' => MasterDataModelController::class,
+],function () {
+    Route::get('/index', 'index')->name('index');
+    Route::post('/store', 'store')->name('store');
+    Route::get('/update', 'update')->name('update');
+    Route::get('/destroy', 'destroy')->name('destroy');
+    Route::get('/edit', 'edit')->name('edit');
 });

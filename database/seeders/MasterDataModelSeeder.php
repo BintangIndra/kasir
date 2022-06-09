@@ -13,6 +13,6 @@ class MasterDataModelSeeder extends Seeder
      */
     public function run()
     {
-        //
+        \App\Models\masterDataModel::factory(20)->create();
     }
 }
