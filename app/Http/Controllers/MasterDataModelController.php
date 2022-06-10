@@ -15,7 +15,11 @@ class MasterDataModelController extends Controller
      */
     public function index()
     {
-        return redirect()->route('welcome');
+        if (request()->ajax()) {
+            return masterDataModel::all();
+        }
+        
+        return  view('masterData.index');
     }
 
     /**

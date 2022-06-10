@@ -8,6 +8,8 @@
         <!-- Styles -->
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
         <title>Laravel</title>
+        <script src="{{ asset('jquery.min.js') }}"></script>
+        @stack('scripts')
 
         <style>
             body {
@@ -63,7 +65,7 @@
     @endguest
 
     @auth
-    <nav class="navbar navbar-expand-lg bg-light">
+    <nav class="navbar navbar-expand-lg bg-info">
         <div class="container-fluid d-flex justify-content-between">
             <button class="btn btn-light" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-border-width" viewBox="0 0 16 16">
@@ -80,20 +82,7 @@
         </div>
     </nav>
 
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-body d-flex justify-content-center">
-            <p>Yakin Mau Logout</p>
-            </div>
-            <div class="modal-footer d-flex justify-content-center">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <a href="{{ route('logout') }}" class="btn btn-danger">Yes</a>
-            </div>
-        </div>
-        </div>
-    </div>
+    <x-alert content="Yakin Mau Keluar?" :route="route('logout')" id="exampleModal" />
     
     <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
         <div class="offcanvas-header" style="background-color:#04293A;">
@@ -110,7 +99,7 @@
                   <a class="nav-link active" aria-current="page" href="{{ route('welcome') }}">Home</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#">Master Data</a>
+                  <a class="nav-link" href="{{ route('masterData.index') }}">Master Data</a>
                 </li>
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -128,7 +117,9 @@
             </ul>
         </div>
     </div>
-    
+
+    @yield('content')
+
     @endauth
     
 
