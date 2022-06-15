@@ -4,22 +4,21 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 
-class Alert extends Component
+class Modal extends Component
 {   
+    public $title;
     public $content;
-    public $route;
     public $id;
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($content,$route,$id)
+    public function __construct($content,$id,$title)
     {
         $this->content = $content;
-        $this->route = $route;
         $this->id = $id;
-
+        $this->title = $title;
     }
 
     /**
@@ -29,6 +28,6 @@ class Alert extends Component
      */
     public function render()
     {
-        return view('components.alert');
+        return view('components.modal');
     }
 }

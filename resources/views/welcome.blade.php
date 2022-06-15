@@ -3,17 +3,29 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="{{ asset('jquery.min.js') }}"></script>
         <!-- Scripts -->
         <script src="{{ asset('js/app.js') }}" defer></script>
         <!-- Styles -->
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
         <title>Laravel</title>
-        <script src="{{ asset('jquery.min.js') }}"></script>
+        
         @stack('scripts')
 
         <style>
             body {
                 font-family: 'Nunito', sans-serif;
+            }
+            
+            table,th,td{
+                border: 0.5px solid;border-color:teal;background-color:black;
+            }
+    
+            .dataTables_length{
+                text-align:start !important;
+            }
+            .dataTables_filter{
+                text-align:end !important;
             }
         </style>
     </head>

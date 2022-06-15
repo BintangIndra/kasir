@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\masterDataModel;
 use App\Http\Requests\StoremasterDataModelRequest;
 use App\Http\Requests\UpdatemasterDataModelRequest;
+use Illuminate\Http\Request;
 
 class MasterDataModelController extends Controller
 {
@@ -39,8 +40,28 @@ class MasterDataModelController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //
+    {   
+        $validatedData = $request->validate([
+            'file' => 'required|mimes:jpg,bmp,png,jpeg|max:2048',
+            'name' => 'required',
+            'jenis' => 'required',
+            'harga' => 'required',
+        ]);
+
+        $name = $request->file('file')->hashName();
+ 
+        $path = $request->file('file')->store('public/masterData/images');
+
+        $masterDataModel = new masterDataModel;
+        $masterDataModel->nama = $request->name;
+        $masterDataModel->jenis = $request->jenis;
+        $masterDataModel->harga = $request->harga;
+        $masterDataModel->imageUrl = $name;
+        $masterDataModel->save();
+
+        return  view('masterData.index');
+
+        
     }
 
     /**

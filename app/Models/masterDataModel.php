@@ -13,5 +13,6 @@ class masterDataModel extends Model
         'harga',
         'nama',
         'jenis',
+        'imageUrl',
     ];
 }
