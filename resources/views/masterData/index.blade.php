@@ -71,6 +71,12 @@
     </div>
     
     <script>
+        $(document).ready(function() {
+            @if ($errors->any())
+                $('#error').modal('show');
+            @endif
+        });
+
         var modal = $('#modalview').html();
         var modaldel = $('#modaldelete').html();
 
@@ -90,14 +96,8 @@
         function showEditModal(data){
             var rows = table.row(data).data();
             console.log(rows);
-        };
-
-        @if ($errors->any())
-            $('#error').modal('show');
-        @endif
+        };      
         
-        
-
         var table = $('#masterDataTable').DataTable({
             paging: true,
             ajax: {

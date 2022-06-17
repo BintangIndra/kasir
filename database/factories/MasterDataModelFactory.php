@@ -24,7 +24,7 @@ class MasterDataModelFactory extends Factory
             'nama' => $this->faker->name(),
             'harga' => $this->faker->randomNumber(5, true),
             'jenis' => $this->faker->randomElement(['makanan', 'minuman']),
-            'imageUrl' => $this->faker->image(storage_path('images'), 360, 360, 'animals', true, true, 'cats', true, 'jpg'),
+            'imageUrl' => $this->faker->image(null, 360, 360, 'animals', true, true, 'cats', true, 'jpg'),
         ];
     }
 }
