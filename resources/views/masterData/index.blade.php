@@ -71,67 +71,79 @@
     </div>
     
     <script>
-        $(document).ready(function() {
-            var modal = $('#modalview').html();
-            var modaldel = $('#modaldelete').html();
+        var modal = $('#modalview').html();
+        var modaldel = $('#modaldelete').html();
 
-            @if ($errors->any())
-                $('#error').modal('show');
-            @endif
+        function showviewModal(data){
+            var row = table.row(data).data();
+            var contentview = 
+            '<div><h4>'+row.nama+'</h4></br>'+
+            '<img src="{{asset('images')}}/'+row.imageUrl+'" class="img-fluid" alt="Responsive image"></div>';
+
+            var html = modal.replace('++++', contentview);
+            var html = html.replace('----', 'Modalview');
+            $('#modalview').html(html);
             
-            $('#masterDataTable').DataTable({
-                paging: true,
-                ajax: {
-                    url: "{{ route('masterData.index') }}",
-                    dataSrc: function ( responses ) {
-                        return responses;
+            $('#Modalview').modal('show');
+        };
+        
+        function showEditModal(data){
+            var rows = table.row(data).data();
+            console.log(rows);
+        };
+
+        @if ($errors->any())
+            $('#error').modal('show');
+        @endif
+        
+        
+
+        var table = $('#masterDataTable').DataTable({
+            paging: true,
+            ajax: {
+                url: "{{ route('masterData.index') }}",
+                dataSrc: function ( responses ) {
+                    return responses;
+                }
+            },
+            columns: [
+                { data: 'nama' },
+                { data: 'jenis' },
+                { data: 'harga' },
+                {
+                    data: "id",
+                    class: "text-end",
+                    render: function ( data, type, row, meta ) {
+                        let action =
+                        '<ul class="navbar-nav">'+
+                        '    <li class="nav-item dropdown">'+
+                        '        <a class="btn btn-info dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">'+
+                        '        </a>'+
+                        '        <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">'+
+                        '        <button type="button" class="dropdown-item" onclick="showviewModal('+meta.row+')">View</button>'+
+                        '    </li>'+
+                        '        <li><button type="button" class="dropdown-item text-success" data-bs-toggle="modal" data-bs-target="#exampleModal'+row.id+'" onclick="showEditModal('+meta.row+')">Edit</button></li>'+
+                        '        <li>'+
+                        '            <hr class="dropdown-divider">'+
+                        '        </li>'+
+                        '        <li><button type="button" class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#exampleModaldel'+row.id+'">Delete</button></li>'+
+                        '        </ul>'+
+                        '    </li>'+
+                        '</ul>'
+                        ;
+
+                        modaldelcontent = 'Yakin mau hapus '+row.nama+'?';
+                        modaldelroute = '{{ route('masterData.destroy','+') }}';
+                        var html = modaldel.replace('++++', modaldelcontent);
+                        var html = html.replace('----', 'exampleModaldel'+row.id);
+                        var html = html.replace('////', modaldelroute.replace('+', row.id) );
+                        $('#modaldelete').append(html);
+
+                        return action;
                     }
                 },
-                columns: [
-                    { data: 'nama' },
-                    { data: 'jenis' },
-                    { data: 'harga' },
-                    {
-                        data: "id",
-                        class: "text-end",
-                        render: function ( data, type, row, meta ) {
-                            let action =
-                            '<ul class="navbar-nav">'+
-                            '    <li class="nav-item dropdown">'+
-                            '        <a class="btn btn-info dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">'+
-                            '        </a>'+
-                            '        <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">'+
-                            '        <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal'+row.id+'">View</button>'+
-                            '    </li>'+
-                            '        <li><button type="button" class="dropdown-item text-success" data-bs-toggle="modal" data-bs-target="#exampleModal'+row.id+'">Edit</button></li>'+
-                            '        <li>'+
-                            '            <hr class="dropdown-divider">'+
-                            '        </li>'+
-                            '        <li><button type="button" class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#exampleModaldel'+row.id+'">Delete</button></li>'+
-                            '        </ul>'+
-                            '    </li>'+
-                            '</ul>'
-                            ;
-                            
-                            var contentview = '<h4>'+row.nama+'</h4></br>'+
-                            '<img src="{{asset("masterData/")}}/'+row.imageUrl+'" class="img-fluid" alt="Responsive image">';
-                            
-                            var html = modal.replace('++++', contentview);
-                            var html = html.replace('----', 'exampleModal'+row.id);
-                            $('#modalview').append(html);
-                            
-                            modaldelcontent = 'Yakin mau hapus '+row.nama+'?';
-                            var html = modaldel.replace('++++', modaldelcontent);
-                            var html = html.replace('----', 'exampleModaldel'+row.id);
-                            var html = html.replace('////', '{{ route('logout') }}/'+row.id);
-                            $('#modaldelete').append(html);
-
-                            return action;
-                        }
-                    },
-                ],
-            });
-        } );
+            ],
+        });
     </script>
 @endsection
 

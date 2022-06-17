@@ -6,6 +6,7 @@ use App\Models\masterDataModel;
 use App\Http\Requests\StoremasterDataModelRequest;
 use App\Http\Requests\UpdatemasterDataModelRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class MasterDataModelController extends Controller
 {
@@ -48,15 +49,18 @@ class MasterDataModelController extends Controller
             'harga' => 'required',
         ]);
 
-        $name = $request->file('file')->hashName();
+        // $name = $request->file('file')->hashName();
  
-        $path = $request->file('file')->store('public/masterData/images');
+        // $path = $request->file('file')->store('public/masterData/images');
+
+        $imageName = $request->file('file')->hashName();
+        $request->file->move(public_path('images'), $imageName);
 
         $masterDataModel = new masterDataModel;
         $masterDataModel->nama = $request->name;
         $masterDataModel->jenis = $request->jenis;
         $masterDataModel->harga = $request->harga;
-        $masterDataModel->imageUrl = $name;
+        $masterDataModel->imageUrl = $imageName;
         $masterDataModel->save();
 
         return  view('masterData.index');
@@ -104,8 +108,14 @@ class MasterDataModelController extends Controller
      * @param  \App\Models\masterDataModel  $masterDataModel
      * @return \Illuminate\Http\Response
      */
-    public function destroy(masterDataModel $masterDataModel)
-    {
-        //
+    public function destroy($id)
+    {   
+        $masterDataModel = new masterDataModel;
+        $masterDataModel = $masterDataModel->find($id);
+        $imageName = $masterDataModel->imageUrl;
+        unlink(public_path('images').'/'.$imageName);
+        $masterDataModel->delete();
+        
+        return  view('masterData.index');
     }
 }
