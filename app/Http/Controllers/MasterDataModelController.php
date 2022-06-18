@@ -87,7 +87,7 @@ class MasterDataModelController extends Controller
      */
     public function edit(masterDataModel $masterDataModel)
     {
-        //
+        
     }
 
     /**
@@ -97,9 +97,30 @@ class MasterDataModelController extends Controller
      * @param  \App\Models\masterDataModel  $masterDataModel
      * @return \Illuminate\Http\Response
      */
-    public function update(masterDataModel $masterDataModel)
+    public function update(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'file' => 'required|mimes:jpg,bmp,png,jpeg|max:2048',
+            'name' => 'required',
+            'jenis' => 'required',
+            'harga' => 'required',
+        ]);
+
+        $masterDataModel = new masterDataModel;
+        $masterDataModel = $masterDataModel->find($request->id);
+
+        if ($request->hasFile('file')) {
+            dd('adafiles');
+            // $imageName = $request->file('file')->hashName();
+            // $request->file->move(public_path('images'), $imageName);
+            // $masterDataModel->imageUrl = $imageName;
+        }
+
+        // $imageName = $masterDataModel->imageUrl;
+        // unlink(public_path('images').'/'.$imageName);
+
+        // $imageName = $request->file('file')->hashName();
+        // $request->file->move(public_path('images'), $imageName);
     }
 
     /**

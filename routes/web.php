@@ -31,7 +31,7 @@ Route::group([
 ],function () {
     Route::get('/index', 'index')->name('index');
     Route::post('/store', 'store')->name('store');
-    Route::get('/update', 'update')->name('update');
+    Route::post('/update/{id}', 'update')->name('update');
     Route::get('/destroy/{id}', 'destroy')->name('destroy');
     Route::get('/edit', 'edit')->name('edit');
 });

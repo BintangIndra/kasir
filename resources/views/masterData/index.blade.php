@@ -43,8 +43,6 @@
                 <button type="submit" class="btn btn-info">Submit</button>
             </form>';
     @endphp
-
-    <x-modal :content="$contentcreate" id="exampleModalcreate" title="Create Master Data"/>
     
     @if ($errors->any())
         @php
@@ -60,10 +58,16 @@
                 </div>';
         @endphp
         <x-alert :content="$content" :route=null id="error"/>
-    @endif    
+    @endif 
+    
+    <x-modal :content="$contentcreate" id="exampleModalcreate" title="Create Master Data"/>
 
     <div id="modalview">
         <x-alert content="++++" :route=null id="----"/>
+    </div>
+
+    <div id="modaledit">
+        <x-modal content="++++" id="exampleModaledit" title="Edit Master Data"/>
     </div>
 
     <div id="modaldelete">
@@ -78,6 +82,7 @@
         });
 
         var modal = $('#modalview').html();
+        var modaledit = $('#modaledit').html();
         var modaldel = $('#modaldelete').html();
 
         function showviewModal(data){
@@ -94,10 +99,49 @@
         };
         
         function showEditModal(data){
-            var rows = table.row(data).data();
-            console.log(rows);
+            var row = table.row(data).data();
+            var contentedit =
+                '<form method="POST" action="{{ route("masterData.update", ":id")}}" enctype="multipart/form-data">'+
+                    row.nama+
+                    '{{csrf_field()}}'+
+                '    <div class="form-group">'+
+                '        <label for="name">Name Produk</label>'+
+                '        <input type="text" class="form-control" name="name" placeholder="Name Produk">'+
+                '    </div>'+
+                '    <div class="form-group">'+
+                '        <label for="jenis">Jenis Produk</label>'+
+                '        <input type="text" class="form-control" name="jenis" placeholder="Jenis Produk">'+
+                '    </div>'+
+                '    <div class="form-group">'+
+                '        <label for="harga">Harga</label>'+
+                '        <input type="number" class="form-control" name="harga" placeholder="Harga">'+
+                '    </div>'+
+                '    <div class="form-group mb-2">'+
+                '        <label for="Upload File">Upload File</label><br>'+
+                '        <input type="file" name="file" placeholder="Choose file" id="file">'+
+                '    </div>'+
+                '    <button type="submit" class="btn btn-info">Submit</button>'+
+                '</form>' 
+            ;
+            var html = modaledit.replace('++++', contentedit);
+            var html = html.replace(':id', row.id);
+            $('#modaledit').html(html);
+
+            $('#exampleModaledit').modal('show');
         };      
-        
+
+        function showDeleteModal(data){
+            var row = table.row(data).data();
+            modaldelcontent = 'Yakin mau hapus '+row.nama+'?';
+            modaldelroute = '{{ route('masterData.destroy','+') }}';
+            var html = modaldel.replace('++++', modaldelcontent);
+            var html = html.replace('----', 'exampleModaldel');
+            var html = html.replace('////', modaldelroute.replace('+', row.id) );
+            $('#modaldelete').html(html);
+
+            $('#exampleModaldel').modal('show');
+        }
+
         var table = $('#masterDataTable').DataTable({
             paging: true,
             ajax: {
@@ -126,18 +170,11 @@
                         '        <li>'+
                         '            <hr class="dropdown-divider">'+
                         '        </li>'+
-                        '        <li><button type="button" class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#exampleModaldel'+row.id+'">Delete</button></li>'+
+                        '        <li><button type="button" class="dropdown-item text-danger" onclick="showDeleteModal('+meta.row+')">Delete</button></li>'+
                         '        </ul>'+
                         '    </li>'+
                         '</ul>'
                         ;
-
-                        modaldelcontent = 'Yakin mau hapus '+row.nama+'?';
-                        modaldelroute = '{{ route('masterData.destroy','+') }}';
-                        var html = modaldel.replace('++++', modaldelcontent);
-                        var html = html.replace('----', 'exampleModaldel'+row.id);
-                        var html = html.replace('////', modaldelroute.replace('+', row.id) );
-                        $('#modaldelete').append(html);
 
                         return action;
                     }
