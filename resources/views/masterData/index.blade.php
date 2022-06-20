@@ -106,19 +106,20 @@
                     '{{csrf_field()}}'+
                 '    <div class="form-group">'+
                 '        <label for="name">Name Produk</label>'+
-                '        <input type="text" class="form-control" name="name" placeholder="Name Produk">'+
+                '        <input type="text" class="form-control" name="name" value="'+row.nama+'">'+
                 '    </div>'+
                 '    <div class="form-group">'+
                 '        <label for="jenis">Jenis Produk</label>'+
-                '        <input type="text" class="form-control" name="jenis" placeholder="Jenis Produk">'+
+                '        <input type="text" class="form-control" name="jenis" value="'+row.jenis+'">'+
                 '    </div>'+
                 '    <div class="form-group">'+
                 '        <label for="harga">Harga</label>'+
-                '        <input type="number" class="form-control" name="harga" placeholder="Harga">'+
+                '        <input type="number" class="form-control" name="harga" value="'+row.harga+'">'+
                 '    </div>'+
                 '    <div class="form-group mb-2">'+
                 '        <label for="Upload File">Upload File</label><br>'+
-                '        <input type="file" name="file" placeholder="Choose file" id="file">'+
+                '           <img src="{{asset('images')}}/'+row.imageUrl+'" class="img-fluid" alt="Responsive image">'+
+                '        <input type="file" name="file" valu placeholder="Choose file" id="file">'+
                 '    </div>'+
                 '    <button type="submit" class="btn btn-info">Submit</button>'+
                 '</form>' 
@@ -138,7 +139,7 @@
             var html = html.replace('----', 'exampleModaldel');
             var html = html.replace('////', modaldelroute.replace('+', row.id) );
             $('#modaldelete').html(html);
-
+ 
             $('#exampleModaldel').modal('show');
         }
 

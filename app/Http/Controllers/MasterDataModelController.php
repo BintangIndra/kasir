@@ -100,7 +100,6 @@ class MasterDataModelController extends Controller
     public function update(Request $request)
     {
         $validatedData = $request->validate([
-            'file' => 'required|mimes:jpg,bmp,png,jpeg|max:2048',
             'name' => 'required',
             'jenis' => 'required',
             'harga' => 'required',
@@ -109,18 +108,28 @@ class MasterDataModelController extends Controller
         $masterDataModel = new masterDataModel;
         $masterDataModel = $masterDataModel->find($request->id);
 
-        if ($request->hasFile('file')) {
-            dd('adafiles');
-            // $imageName = $request->file('file')->hashName();
-            // $request->file->move(public_path('images'), $imageName);
-            // $masterDataModel->imageUrl = $imageName;
+        if($request->file == ''){
+            $masterDataModel->nama = $request->name;
+            $masterDataModel->jenis = $request->jenis;
+            $masterDataModel->harga = $request->harga;
+            $masterDataModel->save();
+
+            return  view('masterData.index');
+        }else{
+            $imageName = $masterDataModel->imageUrl;
+            unlink(public_path('images').'/'.$imageName);
+
+            $imageName = $request->file('file')->hashName();
+            $request->file->move(public_path('images'), $imageName);
+
+            $masterDataModel->nama = $request->name;
+            $masterDataModel->jenis = $request->jenis;
+            $masterDataModel->harga = $request->harga;
+            $masterDataModel->imageUrl = $imageName;
+            $masterDataModel->save();
+
+            return  view('masterData.index');
         }
-
-        // $imageName = $masterDataModel->imageUrl;
-        // unlink(public_path('images').'/'.$imageName);
-
-        // $imageName = $request->file('file')->hashName();
-        // $request->file->move(public_path('images'), $imageName);
     }
 
     /**

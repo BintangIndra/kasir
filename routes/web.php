@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\loginController;
 use App\Http\Controllers\MasterDataModelController;
+use App\Http\Controllers\KasirController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,18 @@ Route::group([
     'prefix' => 'masterData',
     'as' => 'masterData.',
     'controller' => MasterDataModelController::class,
+],function () {
+    Route::get('/index', 'index')->name('index');
+    Route::post('/store', 'store')->name('store');
+    Route::post('/update/{id}', 'update')->name('update');
+    Route::get('/destroy/{id}', 'destroy')->name('destroy');
+    Route::get('/edit', 'edit')->name('edit');
+});
+
+Route::group([
+    'prefix' => 'kasir',
+    'as' => 'kasir.',
+    'controller' => KasirController::class,
 ],function () {
     Route::get('/index', 'index')->name('index');
     Route::post('/store', 'store')->name('store');

@@ -113,6 +113,9 @@
                 <li class="nav-item">
                   <a class="nav-link" href="{{ route('masterData.index') }}">Master Data</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('kasir.index') }}">Kasir</a>
+                  </li>
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Dropdown
