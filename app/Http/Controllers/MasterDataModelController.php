@@ -18,6 +18,10 @@ class MasterDataModelController extends Controller
     public function index()
     {
         if (request()->ajax()) {
+            if(request()->jenis_makanan){
+                return masterDataModel::getByJenis(request()->jenis_makanan);
+            }
+
             return masterDataModel::all();
         }
         

@@ -42,29 +42,34 @@
                 </div>
                 <button type="submit" class="btn btn-info">Simpan</button>
             </div>
+
         </div>
     </div>
 
     <script>
-        $.ajax({
-            url: "{{ route('masterData.index') }}",
-            context: document.body,
-            success:function(data){
-                $.each(data, function( index, value ) {
-                    content = 
-                    '<div class="card col-sm-3 mt-1">'+
-                    '    <img src="https://images.tokopedia.net/img/cache/700/product-1/2019/10/2/525060445/525060445_77b3fbc9-8296-4c5e-9cd1-180400149b5d_1000_1000.jpg" class="card-img-top" alt="...">'+
-                    '    <div class="card-body">'+
-                    '    <p class="card-text">Nama Barang</p>'+
-                    '    </div>'+
-                    '</div>'
-                    ;
-                    $('#dataCard').append(content);
-                });
-            }
-        }).done(function() {
-            $( this ).addClass( "done" );
-        });
+        dataCard('makanan');
+
+        function dataCard(data){
+            $.ajax({
+                url: "{{ route('masterData.index') }}",
+                data: {
+                    jenis_makanan : data
+                },
+                success:function(data){
+                    $.each(data, function( index, value ) {
+                        content = 
+                        '<div class="card col-sm-2 m-2">'+
+                        '    <img src="{{asset('images')}}/'+value.imageUrl+'" class="card-img-top" alt="...">'+
+                        '    <div class="card-body">'+
+                        '       <p class="card-text">'+value.nama+'</p>'+
+                        '    </div>'+
+                        '</div>'
+                        ;
+                        $('#dataCard').append(content);
+                    });
+                }
+            });
+        };
     </script>
 @endsection
 

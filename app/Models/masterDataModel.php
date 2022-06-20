@@ -15,4 +15,8 @@ class masterDataModel extends Model
         'jenis',
         'imageUrl',
     ];
+
+    public function getByJenis($data){
+        return masterDataModel::where('jenis',$data)->get();
+    }
 }
