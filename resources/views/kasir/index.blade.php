@@ -11,11 +11,7 @@
 
     <div class="row container-fluid mt-1 ms-1" style="width:99vw !important;height:85vh !important;">
         <div class="row col-sm-8 border border-info overflow-auto" style="height: 100% !important" id="dataCard">
-            <div class="col-sm-12 ms-1">
-                <button class="btn btn-info">Jenis Makanan</button>
-                <button class="btn btn-info">Jenis Makanan</button>
-                <button class="btn btn-info">Jenis Makanan</button>
-                <button class="btn btn-info">Jenis Makanan</button>
+            <div class="col-sm-12 ms-1" id="dataCategory">
             </div>
         </div>
         <div class="col-sm-4" style="height: 100% !important;">
@@ -48,6 +44,25 @@
 
     <script>
         dataCard('makanan');
+        dataCategory(true);
+
+        function dataCategory(data){
+            $.ajax({
+                url: "{{ route('masterData.index') }}",
+                data: {
+                    getjenis : data
+                },
+                success:function(data){
+                    var content="";
+                    $.each(data, function( index, value ) {
+                        content = content +
+                        '<button class="btn btn-info m-1" onclick="dataCard(\''+value.jenis+'\')">'+value.jenis+'</button>';
+                    });
+
+                    $('#dataCategory').html(content);
+                }
+            });
+        };
 
         function dataCard(data){
             $.ajax({
@@ -56,17 +71,17 @@
                     jenis_makanan : data
                 },
                 success:function(data){
+                    var cardcontent = '';
                     $.each(data, function( index, value ) {
-                        content = 
+                        cardcontent = cardcontent +
                         '<div class="card col-sm-2 m-2">'+
                         '    <img src="{{asset('images')}}/'+value.imageUrl+'" class="card-img-top" alt="...">'+
                         '    <div class="card-body">'+
                         '       <p class="card-text">'+value.nama+'</p>'+
                         '    </div>'+
-                        '</div>'
-                        ;
-                        $('#dataCard').append(content);
+                        '</div>';
                     });
+                    $('#dataCard').append(cardcontent);
                 }
             });
         };

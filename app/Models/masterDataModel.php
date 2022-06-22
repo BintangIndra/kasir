@@ -19,4 +19,8 @@ class masterDataModel extends Model
     public function getByJenis($data){
         return masterDataModel::where('jenis',$data)->get();
     }
+
+    public function getJenis($data){
+        return masterDataModel::select('jenis')->groupBy('jenis')->get();
+    }
 }
