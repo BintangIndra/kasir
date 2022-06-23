@@ -18,7 +18,7 @@ class MasterDataModelController extends Controller
     public function index()
     {
         if (request()->ajax()) {
-            if(request()->jenis_makanan){
+            if(request()->jenis_makanan && request()->jenis_makanan != 'all'){
                 return masterDataModel::getByJenis(request()->jenis_makanan);
             }elseif(request()->getjenis){
                 return masterDataModel::getJenis(request()->jenis);

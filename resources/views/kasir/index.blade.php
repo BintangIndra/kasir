@@ -11,29 +11,18 @@
 
     <div class="row container-fluid mt-1 ms-1" style="width:99vw !important;height:85vh !important;">
         <div class="row col-sm-8 border border-info overflow-auto" style="height: 100% !important" id="dataCard">
-            <div class="col-sm-12 ms-1" id="dataCategory">
-            </div>
         </div>
         <div class="col-sm-4" style="height: 100% !important;">
             <div class="container-fluid mb-1" style="height: 75% !important;padding:0px !important;">
-                <ul class="list-group overflow-auto border border-info" style="height: 100% !important;">
-                    <li class="list-group-item"><p>Nama Makanan X 2 = 20000</p> </li>
-                    <li class="list-group-item"><p>Nama Makanan X 2 = 20000</p> </li>
-                    <li class="list-group-item"><p>Nama Makanan X 2 = 20000</p> </li>
-                    <li class="list-group-item"><p>Nama Makanan X 2 = 20000</p> </li>
-                    <li class="list-group-item"><p>Nama Makanan X 2 = 20000</p> </li>
-                    <li class="list-group-item"><p>Nama Makanan X 2 = 20000</p> </li>
-                    <li class="list-group-item"><p>Nama Makanan X 2 = 20000</p> </li>
-                    <li class="list-group-item"><p>Nama Makanan X 2 = 20000</p> </li>
-                    <li class="list-group-item"><p>Nama Makanan X 2 = 20000</p> </li>
-                    <li class="list-group-item"><p>Nama Makanan X 2 = 20000</p> </li>
-                    <li class="list-group-item"><p>Nama Makanan X 2 = 20000</p> </li>
+                <ul class="list-group overflow-auto border border-info" id="datalist" style="height: 100% !important;">
+                    
                 <ul>
             </div>
 
             <div class="border border-info col-sm-12 d-flex justify-content-between" style="height: 25% !important;">
                 <div class="ms-1">
                     <p>Total :</p>
+                    <p id="totalBayar" data-total="0">0</p>
                     <p>Diskon :</p>
                 </div>
                 <button type="submit" class="btn btn-info">Simpan</button>
@@ -43,8 +32,10 @@
     </div>
 
     <script>
-        dataCard('makanan');
         dataCategory(true);
+        dataCard('makanan');
+        
+        var content = '<div><button class="btn btn-info m-1" onclick="dataCard(\'all\')">Semua</button>';
 
         function dataCategory(data){
             $.ajax({
@@ -52,14 +43,13 @@
                 data: {
                     getjenis : data
                 },
-                success:function(data){
-                    var content="";
+                success:function(data){        
                     $.each(data, function( index, value ) {
-                        content = content +
+                        content +=
                         '<button class="btn btn-info m-1" onclick="dataCard(\''+value.jenis+'\')">'+value.jenis+'</button>';
                     });
 
-                    $('#dataCategory').html(content);
+                    content += '</div>';
                 }
             });
         };
@@ -73,18 +63,48 @@
                 success:function(data){
                     var cardcontent = '';
                     $.each(data, function( index, value ) {
-                        cardcontent = cardcontent +
-                        '<div class="card col-sm-2 m-2">'+
-                        '    <img src="{{asset('images')}}/'+value.imageUrl+'" class="card-img-top" alt="...">'+
-                        '    <div class="card-body">'+
-                        '       <p class="card-text">'+value.nama+'</p>'+
-                        '    </div>'+
-                        '</div>';
+                        cardcontent +=
+                        "<div class='card col-sm-2 m-2' onclick='addMenu("+JSON.stringify(value)+")'>"+
+                        "    <img src='{{asset("images")}}/"+value.imageUrl+"' class='card-img-top' alt='"+value.nama+"'>"+
+                        "    <div class='card-body'>"+
+                        "       <p class='card-text'>"+value.nama+"</p>"+
+                        "    </div>"+
+                        "</div>";
                     });
-                    $('#dataCard').append(cardcontent);
+
+                    $('#dataCard').html(content + cardcontent);
                 }
             });
         };
+
+        function addMenu(value){
+            var jumlah = 1;
+            if($('#idmenu'+value.id).length != 0){
+                jumlah = $('#idmenu'+value.id).data("jumlah") + 1;
+                $('#idmenu'+value.id).remove();
+                $('#datalist').append("<li class='list-group-item' id='idmenu"+value.id+"' data-jumlah='"+jumlah+"' onclick='removeMenu("+JSON.stringify(value)+")'><p>"+value.nama+" = "+jumlah+" X "+value.harga+"</p></li>");
+            }else{
+                $('#datalist').append("<li class='list-group-item' id='idmenu"+value.id+"' data-jumlah='1' onclick='removeMenu("+JSON.stringify(value)+")'><p>"+value.nama+" = "+jumlah+" X "+value.harga+"</p></li>");
+            }
+
+            $('#totalBayar').html($('#totalBayar').data("total") + value.harga);
+            $('#totalBayar').data("total",$('#totalBayar').data("total") + value.harga);
+        }
+
+        function removeMenu(value){
+            var jumlah = 1;
+            if($('#idmenu'+value.id).data("jumlah") > 1){
+                jumlah = $('#idmenu'+value.id).data("jumlah") - 1;
+                $('#idmenu'+value.id).remove();
+                $('#datalist').append("<li class='list-group-item' id='idmenu"+value.id+"' data-jumlah='"+jumlah+"' onclick='removeMenu("+JSON.stringify(value)+")'><p>"+value.nama+" = "+jumlah+" X "+value.harga+"</p></li>");
+            }else{
+                $('#idmenu'+value.id).remove();
+            }
+
+            $('#totalBayar').html($('#totalBayar').data("total") - value.harga);
+            $('#totalBayar').data("total",$('#totalBayar').data("total") - value.harga);
+        }
+
     </script>
 @endsection
 
