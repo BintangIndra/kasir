@@ -26,12 +26,29 @@
                     <p>Diskon :</p>
                     <input type="number" class="form-control">
                 </div>
-                <button type="submit" class="btn btn-info" onclick="">Simpan</button>
+                <button type="button" class="btn btn-info mb-1" data-bs-toggle="modal" data-bs-target="#saveMenu">Simpan</button>
             </div>
 
         </div>
     </div>
 
+    @php
+    $contentcreate = 
+        '<div class="row">
+            <div class="mb-3 col-sm-12">
+                <label for="atasNama" class="form-label">Atas Nama</label>
+                <input type="text" class="form-control" id="atasNama" placeholder="atasNama">
+            </div>
+            <div class="mb-3 col-sm-12">
+                <label for="nomorMeja" class="form-label">Nomor Meja</label>
+                <input type="Number" class="form-control" id="nomorMeja" placeholder="0">
+            </div>
+            <button class="btn btn-info" onclick="saveMenu()">Simpan</button>
+        </div>';
+    @endphp
+
+    <x-modal :content="$contentcreate" id="saveMenu" title="Tambah Pesanan"/>
+    
     <script>
         dataCategory(true);
         dataCard('all');
@@ -116,10 +133,37 @@
 
         function drawmenu(){
             var listMenu = '';
-            $.each(menu, function( index, value ) {
-                listMenu += "<li class='list-group-item' id='idmenu"+value.id+"' data-jumlah='"+value.jumlah+"' onclick='removeMenu("+JSON.stringify(value)+")'><p>"+value.nama+" = "+value.jumlah+" X "+value.harga+"</p></li>";
-            });
+            if(menu != []){
+                $.each(menu, function( index, value ) {
+                    listMenu += "<li class='list-group-item' id='idmenu"+value.id+"' data-jumlah='"+value.jumlah+"' onclick='removeMenu("+JSON.stringify(value)+")'><p>"+value.nama+" = "+value.jumlah+" X "+value.harga+"</p></li>";
+                });
+            }
+            
             $('#datalist').html(listMenu);
+        }
+
+        function saveMenu(){
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: "{{ route('kasir.store') }}",
+                method: 'POST',
+                data: {
+                    atasNama: $('#atasNama').val(),
+                    nomorMeja: $('#nomorMeja').val(),
+                    listMenu: menu
+                },
+                success: function(data){
+                    alert("Pesanan atas nama "+data.atasNama+" telah berhasil disimpan");
+                    menu=[];
+                    drawmenu();
+                    $('#totalBayar').html('0');
+                    $('#atasNama').val('');
+                    $('#nomorMeja').val('');
+                    $('#saveMenu').modal('hide');
+                }
+            });
         }
 
     </script>

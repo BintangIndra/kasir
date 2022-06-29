@@ -15,6 +15,12 @@ class CreateKasirsTable extends Migration
     {
         Schema::create('kasirs', function (Blueprint $table) {
             $table->id();
+            $table->string('idTransaksi',15);
+            $table->integer('masterData');
+            $table->string('atasNama',255);
+            $table->tinyInteger('nomorMeja');
+            $table->integer('jumlah');
+            $table->boolean('status');
             $table->timestamps();
         });
     }

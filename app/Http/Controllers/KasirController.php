@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\kasir;
+use Illuminate\Http\Request;
 use App\Http\Requests\StorekasirRequest;
 use App\Http\Requests\UpdatekasirRequest;
 
@@ -36,7 +37,22 @@ class KasirController extends Controller
      */
     public function store(StorekasirRequest $request)
     {
-        //
+        $count = kasir::select('idTransaksi')->where('idTransaksi', 'like','%001'.date('dmY'))->groupBy('idTransaksi')->get()->count();
+
+        $idTransaksi = str_pad(strval($count+1),4,'0',STR_PAD_LEFT).'001'.date('dmY');
+
+        foreach($request->listMenu as $data){
+            $kasir = new kasir;
+            $kasir->masterData = $data['id'];
+            $kasir->idTransaksi = $idTransaksi;
+            $kasir->atasNama = $request->atasNama;
+            $kasir->nomorMeja = $request->nomorMeja;
+            $kasir->jumlah = $data['jumlah'];
+            $kasir->status = 1;
+            $kasir->save();
+        }
+
+        return $kasir;
     }
 
     /**
@@ -47,7 +63,9 @@ class KasirController extends Controller
      */
     public function show(kasir $kasir)
     {
-        //
+        if (request()->ajax()) {
+            return kasir::all();
+        }
     }
 
     /**

@@ -13,6 +13,6 @@ class KasirSeeder extends Seeder
      */
     public function run()
     {
-        //
+        \App\Models\kasir::factory(20)->create();
     }
 }

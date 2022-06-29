@@ -23,4 +23,8 @@ class masterDataModel extends Model
     public function getJenis($data){
         return masterDataModel::select('jenis')->groupBy('jenis')->get();
     }
+
+    public function getId(){
+        return masterDataModel::select('id')->groupBy('id')->get();
+    }
 }
