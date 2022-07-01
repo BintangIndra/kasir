@@ -13,7 +13,7 @@ class masterDataModel extends Model
         'harga',
         'nama',
         'jenis',
-        'imageUrl',
+        'imageUrl'
     ];
 
     public function getByJenis($data){

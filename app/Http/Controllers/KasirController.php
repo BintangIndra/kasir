@@ -26,7 +26,7 @@ class KasirController extends Controller
      */
     public function create()
     {
-        //
+        return view('kasir.create');
     }
 
     /**

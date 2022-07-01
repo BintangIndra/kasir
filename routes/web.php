@@ -43,6 +43,8 @@ Route::group([
     'controller' => KasirController::class,
 ],function () {
     Route::get('/index', 'index')->name('index');
+    Route::get('/create', 'create')->name('create');
+    Route::get('/show', 'show')->name('show');
     Route::post('/store', 'store')->name('store');
     Route::post('/update/{id}', 'update')->name('update');
     Route::get('/destroy/{id}', 'destroy')->name('destroy');
