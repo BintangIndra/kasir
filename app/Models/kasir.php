@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class kasir extends Model
 {
@@ -14,7 +15,25 @@ class kasir extends Model
         'idTransaksi',// '000100110122014'
         'atasNama',
         'nomorMeja',
+        'id',
         'jumlah',
         'status'
     ];
+
+    public function getAllPesanan(){
+        return DB::table('kasirs')
+                    ->select(DB::raw("idTransaksi,atasNama,nomorMeja, SUM(master_data_models.harga * kasirs.jumlah) as count"))
+                    ->join('master_data_models', 'kasirs.masterData', '=', 'master_data_models.id')
+                    ->groupBy('idTransaksi')
+                    ->where('kasirs.status','=',1)
+                    ->get();
+    }
+
+    public function getPesananByID($data){
+        return DB::table('kasirs')
+                    ->select(DB::raw("*"))
+                    ->join('master_data_models', 'kasirs.masterData', '=', 'master_data_models.id')
+                    ->where('kasirs.idTransaksi','=',$data)
+                    ->get();
+    }
 }

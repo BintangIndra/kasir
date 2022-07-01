@@ -64,7 +64,7 @@ class KasirController extends Controller
     public function show(kasir $kasir)
     {
         if (request()->ajax()) {
-            return kasir::all();
+            return kasir::getAllPesanan();
         }
     }
 
@@ -76,7 +76,8 @@ class KasirController extends Controller
      */
     public function edit(kasir $kasir)
     {
-        //
+        // dd(kasir::getAllPesanan());
+        return view('kasir.edit');
     }
 
     /**

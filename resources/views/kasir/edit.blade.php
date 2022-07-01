@@ -9,9 +9,10 @@
     <table id="pesananDataTable" class="table table-dark" style="width:100%;">
         <thead>
             <tr>
-                <th>Name Produk</th>
-                <th>Jenis Produk</th>
-                <th>Harga</th>
+                <th>ID Transaksi</th>
+                <th>Atas Nama</th>
+                <th>Nomor Meja</th>
+                <th>Total</th>
                 <th style="max-width: 20px !important;">Action</th>
             </tr>
         </thead>
@@ -30,9 +31,10 @@
             }
         },
         columns: [
-            { data: 'nama' },
-            { data: 'jenis' },
-            { data: 'harga' },
+            { data: 'idTransaksi' },
+            { data: 'atasNama' },
+            { data: 'nomorMeja' },
+            { data: 'count' },
             {
                 data: "id",
                 class: "text-end",
@@ -64,5 +66,7 @@
 @endsection
 
 @push('scripts')
-
+    <script src="{{ asset('DataTables/datatables.min.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ asset('DataTables/datatables.min.css') }}"/>
+    
 @endpush
