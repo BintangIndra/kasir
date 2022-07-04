@@ -80,17 +80,6 @@
 
                 var html = modal.replace('++++', contentview);
                 var html = html.replace('////', 'Pesanan '+row.atasNama);
-
-                $('#modalBody').insertAfter('<div class="d-flex justify-content-between">'+
-                    '<button class="btn btn-info">Save</button>'+
-                    '<button class="btn btn-info">Print</button>'+
-                '</div>')
-                // console.log($('#Modalview'));
-                console.log($('#modalBody'));
-                // contentview += '<div class="d-flex justify-content-between">'+
-                //     '<button class="btn btn-info">Save</button>'+
-                //     '<button class="btn btn-info">Print</button>'+
-                // '</div>';
                 
                 $('#modalview').html(html);
                 

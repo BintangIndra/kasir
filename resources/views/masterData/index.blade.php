@@ -174,8 +174,7 @@
                         '        <li><button type="button" class="dropdown-item text-danger" onclick="showDeleteModal('+meta.row+')">Delete</button></li>'+
                         '        </ul>'+
                         '    </li>'+
-                        '</ul>'
-                        ;
+                        '</ul>';
 
                         return action;
                     }
