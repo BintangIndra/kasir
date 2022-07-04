@@ -5,7 +5,7 @@
             <h5 class="modal-title">{{ $title }}</h5>
             <button type="button" class="btn-close" style=".btn-close{color:white;}" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-        <div class="modal-body d-flex justify-content-start">
+        <div class="modal-body d-flex justify-content-start" id="modalBody">
             {!! $content !!}
         </div>
     </div>

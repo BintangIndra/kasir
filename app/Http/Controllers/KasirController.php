@@ -62,9 +62,13 @@ class KasirController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(kasir $kasir)
-    {
+    {   
         if (request()->ajax()) {
-            return kasir::getAllPesanan();
+            if(request()->idTransaksi){
+                return kasir::getPesananByID(request()->idTransaksi);
+            }else{
+                return kasir::getAllPesanan();
+            }
         }
     }
 
