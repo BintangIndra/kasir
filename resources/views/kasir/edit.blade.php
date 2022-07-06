@@ -41,7 +41,11 @@
     }
 
     function deleteRow(params) {
-        $('#row'+params).delete()
+        $('#'+params).remove();
+    }
+
+    function submit(params) {
+        $('#'+params).submit();
     }
 
     function showViewModal(data){
@@ -115,7 +119,7 @@
         let row = table.row(data).data();
         let contentview = 
         '<div id="tablePesanan" class="container-fluid">'+
-            '<form action="" method="POST">'+
+            '<form action="{{ route('kasir.update','@@@@') }}" id="tablePesananEdit" method="POST">'+
             '{{csrf_field()}}'+
             '<table class="table table-responsive" style="color:white;">'+
                 '<tr>'+
@@ -138,15 +142,16 @@
             success:function(data){
                 $.each(data, function( index, value ) {
                 contentview +=
-                    '<tr id="row'+row.idTransaksi+'">'+
+                    '<tr id="row'+value.id+'">'+
                         '<td>'+
                             '<p>'+value.nama+'</p>'+
                         '</td>'+
                         '<td class="text-center">'+
-                            '<input type="number" placeholder="'+value.jumlah+'" name="jumlah[]">'+
+                            '<input type="number" placeholder="'+value.jumlah+'" value="'+value.jumlah+'" name="jumlah[]">'+
+                            '<input type="hidden" value="'+value.id+'" name="id[]">'+
                         '</td>'+
                         '<td class="text-center">'+
-                            '<a class="btn btn-danger" onclick="deleteRow('+row.idTransaksi+')">X</a>'+
+                            '<a class="btn btn-danger" onclick="deleteRow(\'row'+value.id+'\')">X</a>'+
                         '</td>'+
                     '</tr>';
                 });
@@ -155,14 +160,16 @@
                 contentview += '</table></form></div>';
                 
                 var footer = '<div>'+
-                        '<a href="{{ route("kasir.bayar",'0000') }}" class="btn btn-info">Simpan</a>'+
+                        '<button class="btn btn-info" onclick="submit(\'tablePesananEdit\')">Simpan</button>'+
                     '</div>';
 
                 var html = modalEdit.replace('++++', contentview);
                 var html = html.replace('////', 'Pesanan '+row.atasNama);
                 var html = html.replace('????', footer);
                 var html = html.replace('0000', row.idTransaksi);
+                var html = html.replace('@@@@', row.idTransaksi);
                 
+
                 $('#modaleditdiv').html(html);
                 
                 $('#ModalEdit').modal('show');

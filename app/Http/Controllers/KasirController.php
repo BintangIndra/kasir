@@ -91,10 +91,24 @@ class KasirController extends Controller
      * @param  \App\Models\kasir  $kasir
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatekasirRequest $request)
+    public function update(Request $request,$id)
     {
-        $kasir = new kasir;
-        $kasir = $kasir->find($request->id);
+        $dataInput = array_combine($request->id,$request->jumlah);
+        $dataTransaksi = new kasir;
+        $dataTransaksi = $dataTransaksi->where('idTransaksi', $id)->get();
+        foreach ($dataTransaksi as $value) {
+            $kasir = new kasir;
+            if(!in_array($value->id,$request->id)){
+                $kasir = $kasir->find($value->id);
+                $kasir->delete();
+            }else{
+                $kasir = $kasir->find($value->id);
+                $kasir->jumlah = $dataInput[$value->id];
+                $kasir->save();
+            }
+        }
+
+        return view('kasir.edit');
     }
 
     public function bayar(kasir $kasir,$id)

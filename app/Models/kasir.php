@@ -31,7 +31,7 @@ class kasir extends Model
 
     public function getPesananByID($data){
         return DB::table('kasirs')
-                    ->select(DB::raw("*"))
+                    ->select(DB::raw("*,kasirs.id as id"))
                     ->join('master_data_models', 'kasirs.masterData', '=', 'master_data_models.id')
                     ->where('kasirs.idTransaksi','=',$data)
                     ->get();
