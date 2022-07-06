@@ -8,6 +8,11 @@
         <div class="modal-body d-flex justify-content-start">
             {!! $content !!}
         </div>
+        @if($footer)
+          <div class="modal-footer">
+            {!! $footer !!}
+          </div>
+        @endif
     </div>
     </div>
 </div>

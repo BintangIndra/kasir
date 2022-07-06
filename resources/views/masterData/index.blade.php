@@ -57,21 +57,21 @@
                     <ul>'.$errorItem.'</ul>
                 </div>';
         @endphp
-        <x-alert :content="$content" :route=null id="error"/>
+        <x-alert :content="$content" :route=null id="error" size="sm"/>
     @endif 
     
-    <x-modal :content="$contentcreate" id="exampleModalcreate" title="Create Master Data"/>
+    <x-modal :content="$contentcreate" id="exampleModalcreate" title="Create Master Data" footer=""/>
 
     <div id="modalview">
-        <x-alert content="++++" :route=null id="----"/>
+        <x-alert content="++++" :route=null id="----" size="sm"/>
     </div>
 
     <div id="modaledit">
-        <x-modal content="++++" id="exampleModaledit" title="Edit Master Data"/>
+        <x-modal content="++++" id="exampleModaledit" title="Edit Master Data" footer=""/>
     </div>
 
     <div id="modaldelete">
-        <x-alert content="++++" route="////" id="----"/>
+        <x-alert content="++++" route="////" id="----" size="sm"/>
     </div>
     
     <script>

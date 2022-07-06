@@ -47,7 +47,7 @@
         </div>';
     @endphp
 
-    <x-modal :content="$contentcreate" id="saveMenu" title="Tambah Pesanan"/>
+    <x-modal :content="$contentcreate" id="saveMenu" title="Tambah Pesanan" footer=""/>
     
     <script>
         dataCategory(true);

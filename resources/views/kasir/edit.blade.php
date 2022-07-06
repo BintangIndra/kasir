@@ -22,16 +22,32 @@
 </div>
 
 <div id="modalview">
-    <x-modal content="++++" title="////" id="Modalview"/>
+    <x-modal content="++++" title="////" id="Modalview" footer="????"/>
+</div>
+
+<div id="modaleditdiv">
+    <x-modal content="++++" title="////" id="ModalEdit" footer="????"/>
 </div>
 
 <script>
     var modal = $('#modalview').html();
+    var modalEdit = $('#modaleditdiv').html();
+    
+    function print(params) {
+        w = window.open();
+        w.document.write($('#tablePesanan').html())
+        w.print();
+        w.close();
+    }
 
-    async function showViewModal(data){
-        var row = table.row(data).data();
-        var contentview = 
-        '<table class="table table-responsive" style="color:white;">'+
+    function deleteRow(params) {
+        $('#row'+params).delete()
+    }
+
+    function showViewModal(data){
+        let row = table.row(data).data();
+        let contentview = 
+        '<div id="tablePesanan" class="container-fluid"><table class="table table-responsive" style="color:white;">'+
             '<tr>'+
                 '<th>'+
                     '<p>NAMA</p>'+
@@ -48,7 +64,6 @@
             data: {
                 idTransaksi : row.idTransaksi,
             },
-            async :true,
             success:function(data){
                 $.each(data, function( index, value ) {
                 contentview +=
@@ -76,10 +91,17 @@
                                     row.count+
                                 '</td>'+
                             '</tr>'+
-                        '</table>';
+                        '</table></div>';
+                
+                var footer = '<div>'+
+                        '<button class="btn btn-light me-1" onclick="print()">Print</button>'+
+                        '<a href="{{ route("kasir.bayar",'0000') }}" class="btn btn-info">Bayar</a>'+
+                    '</div>';
 
                 var html = modal.replace('++++', contentview);
                 var html = html.replace('////', 'Pesanan '+row.atasNama);
+                var html = html.replace('????', footer);
+                var html = html.replace('0000', row.idTransaksi);
                 
                 $('#modalview').html(html);
                 
@@ -88,7 +110,67 @@
         });
         
     };
+    
+    function showEditModal(data){
+        let row = table.row(data).data();
+        let contentview = 
+        '<div id="tablePesanan" class="container-fluid">'+
+            '<form action="" method="POST">'+
+            '{{csrf_field()}}'+
+            '<table class="table table-responsive" style="color:white;">'+
+                '<tr>'+
+                    '<th>'+
+                        '<p>NAMA</p>'+
+                    '</th>'+
+                    '<th class="text-center">'+
+                        '<p>JUMLAH</p>'+
+                    '</th>'+
+                    '<th class="text-end">'+
+                        '<p>ACTION</p>'+
+                    '</th>'+
+                '</tr>';
 
+        $.ajax({
+            url: "{{ route('kasir.show') }}",
+            data: {
+                idTransaksi : row.idTransaksi,
+            },
+            success:function(data){
+                $.each(data, function( index, value ) {
+                contentview +=
+                    '<tr id="row'+row.idTransaksi+'">'+
+                        '<td>'+
+                            '<p>'+value.nama+'</p>'+
+                        '</td>'+
+                        '<td class="text-center">'+
+                            '<input type="number" placeholder="'+value.jumlah+'" name="jumlah[]">'+
+                        '</td>'+
+                        '<td class="text-center">'+
+                            '<a class="btn btn-danger" onclick="deleteRow('+row.idTransaksi+')">X</a>'+
+                        '</td>'+
+                    '</tr>';
+                });
+            },
+            complete:function(){
+                contentview += '</table></form></div>';
+                
+                var footer = '<div>'+
+                        '<a href="{{ route("kasir.bayar",'0000') }}" class="btn btn-info">Simpan</a>'+
+                    '</div>';
+
+                var html = modalEdit.replace('++++', contentview);
+                var html = html.replace('////', 'Pesanan '+row.atasNama);
+                var html = html.replace('????', footer);
+                var html = html.replace('0000', row.idTransaksi);
+                
+                $('#modaleditdiv').html(html);
+                
+                $('#ModalEdit').modal('show');
+            }
+        });
+        
+    };
+    
     var table = $('#pesananDataTable').DataTable({
         paging: true,
         ajax: {
@@ -114,7 +196,7 @@
                     '        <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">'+
                     '        <button type="button" class="dropdown-item" onclick="showViewModal('+meta.row+')">View</button>'+
                     '    </li>'+
-                    '        <li><button type="button" class="dropdown-item text-success" data-bs-toggle="modal" data-bs-target="#exampleModal'+row.id+'" onclick="showEditModal('+meta.row+')">Edit</button></li>'+
+                    '        <li><button type="button" class="dropdown-item text-success" onclick="showEditModal('+meta.row+')">Edit</button></li>'+
                     '        <li>'+
                     '            <hr class="dropdown-divider">'+
                     '        </li>'+

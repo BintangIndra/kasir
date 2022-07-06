@@ -36,4 +36,9 @@ class kasir extends Model
                     ->where('kasirs.idTransaksi','=',$data)
                     ->get();
     }
+
+    public function updateStatus($data){
+        $kasir = new kasir;
+        $kasir = $kasir->where('idTransaksi', $data)->update(['status' => 0]);
+    }
 }

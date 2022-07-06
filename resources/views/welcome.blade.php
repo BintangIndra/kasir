@@ -95,7 +95,7 @@
         </div>
     </nav>
 
-    <x-alert content="Yakin Mau Keluar?" :route="route('logout')" id="exampleModal" />
+    <x-alert content="Yakin Mau Keluar?" :route="route('logout')" id="exampleModal" size="sm" />
     
     <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
         <div class="offcanvas-header" style="background-color:#04293A;">

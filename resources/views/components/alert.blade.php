@@ -1,5 +1,5 @@
 <div class="modal fade" id="{{ $id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-dialog modal-{{ $size }} modal-dialog-centered">
     <div class="modal-content" style="color:black;">
         <div class="modal-body d-flex justify-content-center">
             {!! $content !!}

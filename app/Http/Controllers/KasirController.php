@@ -91,9 +91,16 @@ class KasirController extends Controller
      * @param  \App\Models\kasir  $kasir
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatekasirRequest $request, kasir $kasir)
+    public function update(UpdatekasirRequest $request)
     {
-        //
+        $kasir = new kasir;
+        $kasir = $kasir->find($request->id);
+    }
+
+    public function bayar(kasir $kasir,$id)
+    {   
+        $kasir::updateStatus($id);
+        return view('kasir.edit');
     }
 
     /**
