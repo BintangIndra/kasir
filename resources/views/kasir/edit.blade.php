@@ -1,6 +1,15 @@
 @extends('welcome')
 
 @section('content')
+<style>
+    .select2-dropdown{
+        color:black;
+    }
+    .select2,.select2-container{
+        width: 100% !important;
+    }
+</style>
+
 <div class="m-3">
     <div class="d-flex justify-content-between">
         <h3>Daftar Pesanan</h1>
@@ -38,9 +47,9 @@
     function getMasterBarang() {
         let dataSelect = '';
         let html =
-        '<tr>'+
+        '<tr id="addPesanan">'+
             '<td colspan="2">'+
-            '<select class="form-select" id="selectMasterBarang" aria-label="Default select example">'+
+            '<select class="form-select w-100" id="selectMasterBarang" aria-label="Default select example">'+
                 '++++'+
             '</select>'+
             '</td>'+
@@ -206,6 +215,10 @@
                 $('#modaleditdiv').html(html);
 
                 $('#rowheadtablepesanan').after(selectOptionMB);
+                $('#selectMasterBarang').select2({
+                    dropdownParent: $("#ModalEdit")
+                });
+
                 
                 $('#ModalEdit').modal('show');
             }
@@ -260,6 +273,6 @@
     <script src="{{ asset('DataTables/datatables.min.js') }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ asset('DataTables/datatables.min.css') }}"/>
     
-    <link href="{{ asset('dist/css/select2.min.css') }}" rel="stylesheet" />
     <script src="{{ asset('dist/js/select2.min.js') }}"></script>
+    <link href="{{ asset('dist/css/select2.min.css') }}" rel="stylesheet" />
 @endpush
