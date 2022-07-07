@@ -33,6 +33,40 @@
     var modal = $('#modalview').html();
     var modalEdit = $('#modaleditdiv').html();
     
+    var dataSelect = getMasterBarang();
+
+    function getMasterBarang() {
+        let html =
+        '<tr>'+
+            '<td colspan="2">'+
+            '<select class="form-select" id="selectMasterBarang" aria-label="Default select example">'+
+                '++++'
+            '</select>'+
+            '</td>'+
+            '<td>'+
+            '    <button class="btn btn-info">Tambah</button>'+
+            '</td>'+
+        '</tr>'
+        ;
+
+        $.ajax({
+            url: "{{ route('masterData.index') }}",
+            data: {
+                jenis_makanan : 'all'
+            },
+            success:function(data){
+                $.each(data, function( index, value ) {
+                    dataSelect += '<option value="'+value.id+'">'+value.nama+'</option>';
+                });
+            },
+            complete:function(){
+                html = html.replace('++++', dataSelect);
+                // console.log(html);
+                return html;
+            }
+        });
+    }
+    
     function print(params) {
         w = window.open();
         w.document.write($('#tablePesanan').html())
@@ -122,7 +156,7 @@
             '<form action="{{ route('kasir.update','@@@@') }}" id="tablePesananEdit" method="POST">'+
             '{{csrf_field()}}'+
             '<table class="table table-responsive" style="color:white;">'+
-                '<tr>'+
+                '<tr id="rowheadtablepesanan">'+
                     '<th>'+
                         '<p>NAMA</p>'+
                     '</th>'+
@@ -169,8 +203,10 @@
                 var html = html.replace('0000', row.idTransaksi);
                 var html = html.replace('@@@@', row.idTransaksi);
                 
-
                 $('#modaleditdiv').html(html);
+                // var tdselect = getMasterBarang();
+                console.log(dataSelect)
+                $('#rowheadtablepesanan').after(getMasterBarang());
                 
                 $('#ModalEdit').modal('show');
             }
@@ -225,4 +261,6 @@
     <script src="{{ asset('DataTables/datatables.min.js') }}"></script>
     <link rel="stylesheet" type="text/css" href="{{ asset('DataTables/datatables.min.css') }}"/>
     
+    <link href="{{ asset('dist/css/select2.min.css') }}" rel="stylesheet" />
+    <script src="{{ asset('dist/js/select2.min.js') }}"></script>
 @endpush
