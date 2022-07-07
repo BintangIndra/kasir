@@ -32,22 +32,22 @@
 <script>
     var modal = $('#modalview').html();
     var modalEdit = $('#modaleditdiv').html();
-    
-    var dataSelect = getMasterBarang();
+    getMasterBarang();
+    var selectOptionMB = '';
 
     function getMasterBarang() {
+        let dataSelect = '';
         let html =
         '<tr>'+
             '<td colspan="2">'+
             '<select class="form-select" id="selectMasterBarang" aria-label="Default select example">'+
-                '++++'
+                '++++'+
             '</select>'+
             '</td>'+
             '<td>'+
             '    <button class="btn btn-info">Tambah</button>'+
             '</td>'+
-        '</tr>'
-        ;
+        '</tr>';
 
         $.ajax({
             url: "{{ route('masterData.index') }}",
@@ -61,10 +61,10 @@
             },
             complete:function(){
                 html = html.replace('++++', dataSelect);
-                // console.log(html);
-                return html;
+                selectOptionMB = html;
             }
         });
+
     }
     
     function print(params) {
@@ -204,9 +204,8 @@
                 var html = html.replace('@@@@', row.idTransaksi);
                 
                 $('#modaleditdiv').html(html);
-                // var tdselect = getMasterBarang();
-                console.log(dataSelect)
-                $('#rowheadtablepesanan').after(getMasterBarang());
+
+                $('#rowheadtablepesanan').after(selectOptionMB);
                 
                 $('#ModalEdit').modal('show');
             }
