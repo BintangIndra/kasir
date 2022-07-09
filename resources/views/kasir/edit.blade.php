@@ -47,14 +47,14 @@
     function getMasterBarang() {
         let dataSelect = '';
         let html =
-        '<tr id="addPesanan">'+
+        '<tr id="setOrder">'+
             '<td colspan="2">'+
             '<select class="form-select w-100" id="selectMasterBarang" aria-label="Default select example">'+
                 '++++'+
             '</select>'+
             '</td>'+
             '<td>'+
-            '    <button class="btn btn-info">Tambah</button>'+
+                '<a class="btn btn-info" href="javascript:void(0);" onclick="addPesanan()">Tambah</a>'+
             '</td>'+
         '</tr>';
 
@@ -89,6 +89,29 @@
 
     function submit(params) {
         $('#'+params).submit();
+    }
+
+    function addPesanan(){
+        let idBarang = $('#selectMasterBarang').val();
+        let data = $('#selectMasterBarang').select2('data')[0];
+
+        let html =
+            '<tr id="row'+idBarang+'">'+
+                '<td>'+
+                    '<p>'+data.text+'</p>'+
+                '</td>'+
+                '<td class="text-center">'+
+                    '<input type="number" placeholder="1" value="1" name="jumlah[]">'+
+                    '<input type="hidden" value="new'+idBarang+'" name="id[]">'+
+                '</td>'+
+                '<td class="text-center">'+
+                    '<a class="btn btn-danger" onclick="deleteRow(\'row'+idBarang+'\')">X</a>'+
+                '</td>'+
+            '</tr>';
+
+        if($('#row'+idBarang).length == 0){
+            $('#setOrder').after(html);
+        }
     }
 
     function showViewModal(data){
@@ -182,10 +205,10 @@
             data: {
                 idTransaksi : row.idTransaksi,
             },
-            success:function(data){
-                $.each(data, function( index, value ) {
+            success:function(datas){
+                $.each(datas, function( index, value ) {
                 contentview +=
-                    '<tr id="row'+value.id+'">'+
+                    '<tr id="row'+value.masterData+'">'+
                         '<td>'+
                             '<p>'+value.nama+'</p>'+
                         '</td>'+
@@ -194,7 +217,7 @@
                             '<input type="hidden" value="'+value.id+'" name="id[]">'+
                         '</td>'+
                         '<td class="text-center">'+
-                            '<a class="btn btn-danger" onclick="deleteRow(\'row'+value.id+'\')">X</a>'+
+                            '<a class="btn btn-danger" onclick="deleteRow(\'row'+value.masterData+'\')">X</a>'+
                         '</td>'+
                     '</tr>';
                 });
@@ -223,7 +246,6 @@
                 $('#ModalEdit').modal('show');
             }
         });
-        
     };
     
     var table = $('#pesananDataTable').DataTable({

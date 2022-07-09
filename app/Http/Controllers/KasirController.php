@@ -96,6 +96,19 @@ class KasirController extends Controller
         $dataInput = array_combine($request->id,$request->jumlah);
         $dataTransaksi = new kasir;
         $dataTransaksi = $dataTransaksi->where('idTransaksi', $id)->get();
+        foreach ($dataInput as $key => $value) {
+            if (substr($key, 0, 3) == 'new') {
+                $kasir = new kasir;
+                $kasir->masterData = substr($key, 3);
+                $kasir->idTransaksi = $id;
+                $kasir->atasNama = $dataTransaksi[0]->atasNama;
+                $kasir->nomorMeja = $dataTransaksi[0]->nomorMeja;
+                $kasir->jumlah = $value;
+                $kasir->status = 1;
+                $kasir->save();
+            }
+        }
+
         foreach ($dataTransaksi as $value) {
             $kasir = new kasir;
             if(!in_array($value->id,$request->id)){
