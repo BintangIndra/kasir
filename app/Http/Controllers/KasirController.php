@@ -136,8 +136,10 @@ class KasirController extends Controller
      * @param  \App\Models\kasir  $kasir
      * @return \Illuminate\Http\Response
      */
-    public function destroy(kasir $kasir)
+    public function destroy(kasir $kasir,$id)
     {
-        //
+        $kasir = new kasir;
+        $kasir = $kasir->where('idTransaksi', $id)->delete();
+        return view('kasir.edit');
     }
 }

@@ -13,7 +13,7 @@
 <div class="m-3">
     <div class="d-flex justify-content-between">
         <h3>Daftar Pesanan</h1>
-        <button type="button" class="btn btn-info mb-1" data-bs-toggle="modal" data-bs-target="#exampleModalcreate">Create</button>
+        <a class="btn btn-info mb-1" href="{{ route('kasir.index') }}">Create</a>
     </div>
     <table id="pesananDataTable" class="table table-dark" style="width:100%;">
         <thead>
@@ -38,9 +38,15 @@
     <x-modal content="++++" title="////" id="ModalEdit" footer="????"/>
 </div>
 
+<div id="modaldeletediv">
+    <x-alert content="++++" route="////" id="----" size="sm"/>
+</div>
+
 <script>
     var modal = $('#modalview').html();
     var modalEdit = $('#modaleditdiv').html();
+    var modalDel = $('#modaldeletediv').html();
+
     getMasterBarang();
     var selectOptionMB = '';
 
@@ -247,6 +253,18 @@
             }
         });
     };
+
+    function showDeleteModal(data){
+        var row = table.row(data).data();
+        modaldelcontent = 'Yakin mau hapus '+row.idTransaksi+'?';
+        modaldelroute = '{{ route('kasir.destroy','+') }}';
+        var html = modalDel.replace('++++', modaldelcontent);
+        var html = html.replace('----', 'exampleModaldel');
+        var html = html.replace('////', modaldelroute.replace('+', row.idTransaksi) );
+        $('#modaldeletediv').html(html);
+
+        $('#exampleModaldel').modal('show');
+    }
     
     var table = $('#pesananDataTable').DataTable({
         paging: true,
