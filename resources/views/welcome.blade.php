@@ -107,18 +107,21 @@
             </button>
         </div>
         <div class="offcanvas-body" style="background-color:#04293A;">
-            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3" style="color:white;">
                 <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="{{ route('welcome') }}">Home</a>
+                  <a class="active" aria-current="page" href="{{ route('welcome') }}">Home</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="{{ route('masterData.index') }}">Master Data</a>
+                  <a href="{{ route('masterData.index') }}">Master Data</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('kasir.index') }}">Kasir</a>
+                    <a href="{{ route('kasir.index') }}">Kasir</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('kasir.edit') }}">Pesanan</a>
+                    <a href="{{ route('kasir.edit') }}">Pesanan</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('kasir.laporan') }}">Laporan</a>
                 </li>
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

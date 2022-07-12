@@ -37,6 +37,14 @@ class kasir extends Model
                     ->get();
     }
 
+    public function getPesananByJenis($data){
+        return DB::table('kasirs')
+                    ->select(DB::raw("*,kasirs.id as id"))
+                    ->join('master_data_models', 'kasirs.masterData', '=', 'master_data_models.id')
+                    ->whereIn('master_data_models.jenis', $data)
+                    ->get();
+    }
+
     public function updateStatus($data){
         $kasir = new kasir;
         $kasir = $kasir->where('idTransaksi', $data)->update(['status' => 0]);

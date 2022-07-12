@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\kasir;
+use App\Models\masterDataModel;
 use Illuminate\Http\Request;
 use App\Http\Requests\StorekasirRequest;
 use App\Http\Requests\UpdatekasirRequest;
@@ -82,6 +83,15 @@ class KasirController extends Controller
     {
         // dd(kasir::getAllPesanan());
         return view('kasir.edit');
+    }
+
+    public function laporan(kasir $kasir)
+    {   
+        $jenis = masterDataModel::getJenis(request()->jenis);
+        $kasir = $kasir::getPesananByJenis($jenis);
+        
+        dd($kasir);
+        return view('kasir.laporan');
     }
 
     /**
