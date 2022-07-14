@@ -20,12 +20,12 @@ class kasir extends Model
         'status'
     ];
 
-    public function getAllPesanan(){
+    public function getAllPesanan($status){
         return DB::table('kasirs')
-                    ->select(DB::raw("idTransaksi,atasNama,nomorMeja, SUM(master_data_models.harga * kasirs.jumlah) as count"))
+                    ->select(DB::raw("*,idTransaksi,atasNama,nomorMeja, SUM(master_data_models.harga * kasirs.jumlah) as count, kasirs.created_at"))
                     ->join('master_data_models', 'kasirs.masterData', '=', 'master_data_models.id')
                     ->groupBy('idTransaksi')
-                    ->where('kasirs.status','=',1)
+                    ->where('kasirs.status','=',$status)
                     ->get();
     }
 

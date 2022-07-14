@@ -270,6 +270,9 @@
         paging: true,
         ajax: {
             url: "{{ route('kasir.show') }}",
+            data:function(params) {
+                params.status = 1;
+            },
             dataSrc: function ( responses ) {
                 return responses;
             }

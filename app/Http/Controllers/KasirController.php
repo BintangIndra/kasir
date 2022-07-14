@@ -68,7 +68,7 @@ class KasirController extends Controller
             if(request()->idTransaksi){
                 return kasir::getPesananByID(request()->idTransaksi);
             }else{
-                return kasir::getAllPesanan();
+                return kasir::getAllPesanan(intval(request()->status));
             }
         }
     }
@@ -90,7 +90,7 @@ class KasirController extends Controller
         $jenis = masterDataModel::getJenis(request()->jenis);
         $kasir = $kasir::getPesananByJenis($jenis);
         
-        dd($kasir);
+        // dd($kasir);
         return view('kasir.laporan');
     }
 
