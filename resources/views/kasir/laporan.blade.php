@@ -24,6 +24,7 @@
         </ul>
 
         <div class="tab-content" id="myTabContent">
+
             <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
 
                 <div class="d-flex justify-content-start mb-2 mt-2">
@@ -74,14 +75,18 @@
 
 
             <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-
+                
             </div>
 
             
             <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">...</div>
-            <div class="tab-pane fade" id="disabled-tab-pane" role="tabpanel" aria-labelledby="disabled-tab" tabindex="0">...</div>
+            
         </div>
         
+        <div id="modalview">
+            <x-modal content="++++" title="////" id="Modalview" footer="????"/>
+        </div>
+
     </div>
 
     
@@ -93,6 +98,7 @@
         var tableDataPenjualan;
         var totalDataPenjualan = 0;
 
+        var modal = $('#modalview').html();
 
         $('#atasNamaAS').on( 'keyup', function () {
             tableDataPenjualan
@@ -123,18 +129,33 @@
                 .isDataTable(id);
         }
 
+        function print(params) {
+            w = window.open();
+            w.document.write($('#'+params).html())
+            w.print();
+            w.close();
+        }
+
         function renderDataPenjualan() {
             if (isInstanceDatatableCL('#dataPenjualan')) {
                 tableDataPenjualan.destroy();
-                totalDataPenjualan = 0;
-                drawTable();
+                drawTableDataPenjualan();
             } else {
-                totalDataPenjualan = 0;
-                drawTable();
+                drawTableDataPenjualan();
             }
         }
 
-        function drawTable() {
+        function renderDataPenjualan() {
+            if (isInstanceDatatableCL('#dataPenjualan')) {
+                tableDataPenjualan.destroy();
+                drawTableDataPenjualan();
+            } else {
+                drawTableDataPenjualan();
+            }
+        }
+
+        function drawTableDataPenjualan() {
+            totalDataPenjualan = 0;
             tableDataPenjualan = $('#dataPenjualan').DataTable({
             paging: true,
             ajax: {
@@ -144,6 +165,11 @@
                 },
                 dataSrc: function ( responses ) {
                     return responses;
+                },
+                complete:function(){
+                    $( tableDataPenjualan.column( 3 ).footer() ).html(
+                        totalDataPenjualan
+                    );
                 }
             },
             columns: [
@@ -161,14 +187,7 @@
                         '        <a class="btn btn-info dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">'+
                         '        </a>'+
                         '        <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">'+
-                        '        <button type="button" class="dropdown-item" onclick="showViewModal('+meta.row+')">View</button>'+
-                        '    </li>'+
-                        '        <li><button type="button" class="dropdown-item text-success" onclick="showEditModal('+meta.row+')">Edit</button></li>'+
-                        '        <li>'+
-                        '            <hr class="dropdown-divider">'+
-                        '        </li>'+
-                        '        <li><button type="button" class="dropdown-item text-danger" onclick="showDeleteModal('+meta.row+')">Delete</button></li>'+
-                        '        </ul>'+
+                        '        <button type="button" class="dropdown-item" onclick="detailDataPenjualan('+meta.row+')">View</button>'+
                         '    </li>'+
                         '</ul>'
                         ;
@@ -181,9 +200,72 @@
                 totalDataPenjualan += parseInt(aData.count);
             },
         });
-        $( tableDataPenjualan.column( 3 ).footer() ).html(
-            totalDataPenjualan
-        );
+        }
+
+        function detailDataPenjualan(data){
+            let row = tableDataPenjualan.row(data).data();
+            let contentview = 
+            '<div id="tablePesanan" class="container-fluid"><table class="table table-responsive" style="color:white;">'+
+                '<tr>'+
+                    '<th>'+
+                        '<p>NAMA</p>'+
+                    '</th>'+
+                    '<th class="text-center">'+
+                        '<p>JUMLAH</p>'+
+                    '</th>'+
+                    '<th class="text-end">'+
+                        '<p>HARGA</p>'+
+                    '</th>'+
+                '</tr>';
+
+            $.ajax({
+                url: "{{ route('kasir.show') }}",
+                data: {
+                    idTransaksi : row.idTransaksi,
+                },
+                success:function(data){
+                    $.each(data, function( index, value ) {
+                    contentview +=
+                        '<tr>'+
+                            '<td>'+
+                                '<p>'+value.nama+'</p>'+
+                            '</td>'+
+                            '<td class="text-center">'+
+                                '<p>'+value.jumlah+'</p>'+
+                            '</td>'+
+                            '<td class="text-end">'+
+                                '<p>Rp.'+value.jumlah * value.harga+'</p>'+
+                            '</td>'+
+                        '</tr>';
+                    });
+                },
+                complete:function(){
+                    contentview += 
+                                '<tr>'+
+                                    '<td>'+
+                                    '</td>'+
+                                    '<td class="text-center">TOTAL'+
+                                    '</td>'+
+                                    '<td class="text-end">Rp.'+
+                                        row.count+
+                                    '</td>'+
+                                '</tr>'+
+                            '</table></div>';
+                    
+                    var footer = '<div>'+
+                            '<button class="btn btn-light me-1" onclick="print(\'tablePesanan\')">Print</button>'+
+                        '</div>';
+
+                    var html = modal.replace('++++', contentview);
+                    var html = html.replace('////', 'Pesanan '+row.atasNama);
+                    var html = html.replace('????', footer);
+                    var html = html.replace('0000', row.idTransaksi);
+                    
+                    $('#modalview').html(html);
+                    
+                    $('#Modalview').modal('show');
+                }
+            });
         }
 
     </script>
