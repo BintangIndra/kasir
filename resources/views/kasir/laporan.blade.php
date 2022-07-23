@@ -61,11 +61,11 @@
                     </thead>
                     <tfoot>
                         <tr id="tfootDetailEvent">
-                            <th></th>
-                            <th></th>
-                            <th>Total</th>
-                            <th></th>
-                            <th></th>
+                            <td></td>
+                            <td></td>
+                            <td>Total</td>
+                            <td></td>
+                            <td></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -92,7 +92,6 @@
 
         var tableDataPenjualan;
         var totalDataPenjualan = 0;
-        var averageDataPenjualan = 0;
 
 
         $('#atasNamaAS').on( 'keyup', function () {
@@ -127,8 +126,10 @@
         function renderDataPenjualan() {
             if (isInstanceDatatableCL('#dataPenjualan')) {
                 tableDataPenjualan.destroy();
+                totalDataPenjualan = 0;
                 drawTable();
             } else {
+                totalDataPenjualan = 0;
                 drawTable();
             }
         }
