@@ -145,14 +145,6 @@
             }
         }
 
-        function renderDataPenjualan() {
-            if (isInstanceDatatableCL('#dataPenjualan')) {
-                tableDataPenjualan.destroy();
-                drawTableDataPenjualan();
-            } else {
-                drawTableDataPenjualan();
-            }
-        }
 
         function drawTableDataPenjualan() {
             totalDataPenjualan = 0;
