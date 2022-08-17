@@ -85,16 +85,27 @@
                     <div class="card card-body" style="background-color: #04293A;">
                         <div class="row">
                             <div class="col-sm-2">
-                                <label for="dateTransAS">Tanggal Transaksi</label>
-                                <input type="date" id="dateTransAS" class="form-control">
+                                <label for="dateTransAS">Mulai Tanggal</label>
+                                <input type="date" id="dateTransASLPS" class="form-control">
                             </div>
                             <div class="col-sm-2">
-                                <label for="atasNamaAS">Atas Nama</label>
-                                <input type="text" id="atasNamaAS" class="form-control">
+                                <label for="dateTransAS">Sampai Tanggal</label>
+                                <input type="date" id="dateTransASLPE" class="form-control">
                             </div>
                             <div class="col-sm-2">
-                                <label for="totalAS">Total</label>
-                                <input type="number" id="totalAS" class="form-control">
+                                <label for="filterby">Filter By</label>
+                                <select id="filterby" class="form-select">
+                                    <option value="1">Jenis Barang</option>
+                                    <option value="2">Master Data</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-2">
+                                <label for="dataFilter">Data</label>
+                                <input type="text" id="dataFilter" class="form-control">
+                            </div>
+                            <div class="col-sm-2">
+                                <label for="dataFilter"></label>
+                                <button id="dataFilter" class="form-control btn btn-info" onclick="renderLaporanPenjualan()">Search</button>
                             </div>
                         </div>
                     </div>
@@ -105,7 +116,7 @@
                             <th>ID Transaksi</th>
                             <th>Atas Nama</th>
                             <th>Tanggal transaksi</th>
-                            <th>Total</th>
+                            <th>Nama</th>
                             <th style="max-width: 20px !important;">Action</th>
                         </tr>
                     </thead>
@@ -319,23 +330,23 @@
             paging: true,
             ajax: {
                 url: "{{ route('kasir.show') }}",
-                data:function(params) {
-                    params.status = 0;
+                data: function(params) {
+                    params.laporanPenjualan = true;
+                    params.getBy = $('#filterby').val();
+                    params.data = $('#dataFilter').val();
+                    params.date = $('#dateTransASLPS').val();
+                    params.date1 = $('#dateTransASLPE').val();
+
                 },
                 dataSrc: function ( responses ) {
                     return responses;
-                },
-                complete:function(){
-                    $( tableLaporanPenjualan.column( 3 ).footer() ).html(
-                        totalDataPenjualan
-                    );
                 }
             },
             columns: [
                 { data: 'idTransaksi' },
                 { data: 'atasNama' },
                 { data: 'created_at' },
-                { data: 'count',class: "text-end"},
+                { data: 'nama'},
                 {
                     data: "id",
                     class: "text-end",

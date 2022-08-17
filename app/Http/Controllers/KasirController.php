@@ -67,6 +67,8 @@ class KasirController extends Controller
         if (request()->ajax()) {
             if(request()->idTransaksi){
                 return kasir::getPesananByID(request()->idTransaksi);
+            }elseif(request()->laporanPenjualan){
+                return kasir::getLaporanPenjualan(request()->all());
             }else{
                 return kasir::getAllPesanan(intval(request()->status));
             }
@@ -81,7 +83,6 @@ class KasirController extends Controller
      */
     public function edit(kasir $kasir)
     {
-        // dd(kasir::getAllPesanan());
         return view('kasir.edit');
     }
 
@@ -90,7 +91,6 @@ class KasirController extends Controller
         $jenis = masterDataModel::getJenis(request()->jenis);
         $kasir = $kasir::getPesananByJenis($jenis);
         
-        // dd($kasir);
         return view('kasir.laporan');
     }
 
