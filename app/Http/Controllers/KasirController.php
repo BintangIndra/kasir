@@ -69,6 +69,10 @@ class KasirController extends Controller
                 return kasir::getPesananByID(request()->idTransaksi);
             }elseif(request()->laporanPenjualan){
                 return kasir::getLaporanPenjualan(request()->all());
+            }elseif(request()->month){
+                $data['pendapatan'] = kasir::getLaporanBulanan(request()->month)->sum('count');
+                $data['pajak'] = kasir::getLaporanBulanan(request()->month)->sum('pajak');
+                return $data;
             }else{
                 return kasir::getAllPesanan(intval(request()->status));
             }

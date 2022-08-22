@@ -8,6 +8,9 @@
         .nav-link.active{
             color:#0dcaf0 !important;
         }
+        .card-body{
+            padding: 0px !important;
+        }
     </style>
 
     <div class="m-3">
@@ -19,7 +22,7 @@
               <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false" onclick="renderLaporanPenjualan()">Laporan Penjualan</button>
             </li>
             <li class="nav-item" role="presentation">
-              <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Contact</button>
+              <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false" onclick="renderLaporanBulanan()">Laporan Bulanan</button>
             </li>
         </ul>
 
@@ -115,8 +118,9 @@
                         <tr>
                             <th>ID Transaksi</th>
                             <th>Atas Nama</th>
-                            <th>Tanggal transaksi</th>
                             <th>Nama</th>
+                            <th>Harga</th>
+                            <th>Tanggal transaksi</th>
                             <th style="max-width: 20px !important;">Action</th>
                         </tr>
                     </thead>
@@ -127,6 +131,7 @@
                             <td>Total</td>
                             <td></td>
                             <td></td>
+                            <td></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -134,7 +139,57 @@
             </div>
 
             
-            <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">...</div>
+            <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
+                <div class="d-flex justify-content-start mb-2 mt-2">
+                    <button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#advancedSearchLaporanBulanan" aria-expanded="false" aria-controls="advancedSearchLaporanBulanan">
+                        Advanced Search
+                    </button>
+                </div>
+                <div class="collapse mb-2" id="advancedSearchLaporanBulanan">
+                    <div class="card card-body" style="background-color: #04293A;">
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <label for="dateTransASLBS">Bulan</label>
+                                <input type="month" id="monthLB" class="form-control">
+                            </div>
+                            <div class="col-sm-2">
+                                <label for="dataFilterLB"></label>
+                                <button id="dataFilterLB" class="form-control btn btn-info" onclick="renderLaporanBulanan()">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container-fluid row">
+                    <div class="col-lg-12">
+                        <h3>Pendapatan</h3>
+                    </div>
+                    <div class="col-lg-12">
+                        <h4>Penjualan</h4>
+                    </div>
+                    <div class="col-lg-6">
+                        <p>Total</p>
+                    </div>
+                    <div class="col-lg-6">
+                        <p id="totalPenjualan"></p>
+                    </div>
+
+
+                    <div class="col-lg-12">
+                        <h3>Pajak</h3>
+                    </div>
+                    <div class="col-lg-12">
+                        <h4>Penjualan</h4>
+                    </div>
+                    <div class="col-lg-6">
+                        <p>Total</p>
+                    </div>
+                    <div class="col-lg-6">
+                        <p id="totalPajak"></p>
+                    </div>
+                </div>
+
+            </div>
             
         </div>
         
@@ -152,6 +207,7 @@
 
         var tableDataPenjualan;
         var totalDataPenjualan = 0;
+        var totalLaporanPenjualan = 0;
 
         var tableLaporanPenjualan;
 
@@ -203,7 +259,6 @@
         }
 
         function drawTableDataPenjualan() {
-            totalDataPenjualan = 0;
             tableDataPenjualan = $('#dataPenjualan').DataTable({
             paging: true,
             ajax: {
@@ -244,9 +299,22 @@
                     }
                 },
             ],
-            "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                totalDataPenjualan += parseInt(aData.count);
+            
+            "preDrawCallback": function( settings ) {
+                totalDataPenjualan = 0;
             },
+
+            "drawCallback": function( settings ) {
+                var api = new $.fn.dataTable.Api( settings );
+                $(api.columns(3).footer()).html(
+                    totalDataPenjualan
+                );
+            },
+
+            "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ){
+                totalDataPenjualan += parseInt(aData.count);
+            }
+
         });
         }
 
@@ -326,6 +394,7 @@
         }
 
         function drawTableLaporanPenjualan() {
+            totalLaporanPenjualan = 0;
             tableLaporanPenjualan = $('#laporanPenjualan').DataTable({
             paging: true,
             ajax: {
@@ -339,14 +408,23 @@
 
                 },
                 dataSrc: function ( responses ) {
+                    $.each(responses,function( index, value ){
+                        totalLaporanPenjualan += parseInt(value.harga);
+                    });
                     return responses;
+                },
+                complete:function(){
+                    $( tableLaporanPenjualan.column( 3 ).footer() ).html(
+                        totalLaporanPenjualan
+                    );
                 }
             },
             columns: [
                 { data: 'idTransaksi' },
                 { data: 'atasNama' },
-                { data: 'created_at' },
                 { data: 'nama'},
+                { data: 'harga'},
+                { data: 'created_at' },
                 {
                     data: "id",
                     class: "text-end",
@@ -366,10 +444,23 @@
                     }
                 },
             ],
-            "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-                totalDataPenjualan += parseInt(aData.count);
-            },
         });
+        }
+
+        function renderLaporanBulanan() {
+            $.ajax({
+                url: "{{ route('kasir.show') }}",
+                data: {
+                    month : $('#monthLB').val() ? $('#monthLB').val() : '{{ date("Y-m") }}',
+                },
+                success:function(data){
+                    $('#totalPenjualan').html(data.pendapatan);
+                    $('#totalPajak').html(data.pajak.toFixed(2));
+                },
+                complete:function(){
+                    
+                }
+            });
         }
 
     </script>

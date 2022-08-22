@@ -53,7 +53,9 @@ class kasir extends Model
         switch ($data['getBy']) {
             case '1':
                 $kasir = $kasir
+                ->select('*','kasirs.created_at as created_at')
                 ->where('master_data_models.jenis', 'like', '%'.$data['data'] == null ? '': $data['data'].'%')
+                ->where('kasirs.status','=','0')
                 ->whereBetween('kasirs.created_at', [$date, $date1])
                 ->join('master_data_models', 'kasirs.masterData', '=', 'master_data_models.id')
                 ->get()
@@ -61,7 +63,9 @@ class kasir extends Model
               break;
             case '2':
                 $kasir = $kasir
+                ->select('*','kasirs.created_at as created_at')
                 ->where('master_data_models.nama', 'like', '%'.$data['data'] == null ? '': $data['data'].'%')
+                ->where('kasirs.status','=','0')
                 ->whereBetween('kasirs.created_at', [$date, $date1])
                 ->join('master_data_models', 'kasirs.masterData', '=', 'master_data_models.id')
                 ->get()
@@ -70,8 +74,21 @@ class kasir extends Model
             default:
                 $kasir = [];
         }
-        
         return $kasir;
+    }
+
+    public function getLaporanBulanan($month){
+        $date = $month == null ? date('Y-m-d'): $month.'-01 00:00:00';
+        $date1 = $month == null ? date('Y-m-d'): date("Y-m-d", strtotime($month."next month last day")).' 00:00:00';
+
+        return DB::table('kasirs')
+            ->select(DB::raw("idTransaksi,atasNama,nomorMeja,kasirs.created_at,SUM(master_data_models.harga * kasirs.jumlah) as count,SUM(master_data_models.harga * kasirs.jumlah / 10) as pajak"))
+            ->join('master_data_models', 'kasirs.masterData', '=', 'master_data_models.id')
+            ->groupBy('idTransaksi')
+            ->where('kasirs.status','=','0')
+            ->whereBetween('kasirs.created_at', [$date, $date1])
+            ->get()
+            ;
     }
 
     public function updateStatus($data){
