@@ -82,9 +82,9 @@
                     var cardcontent = '';
                     $.each(data, function( index, value ) {
                         cardcontent +=
-                        "<div class='card col-sm-2 m-2' style='height:20% !important;' onclick='addMenu("+JSON.stringify(value)+")'>"+
-                        "    <img src='{{asset("images")}}/"+value.imageUrl+"' class='card-img-top img-fluid'>"+
-                        "    <div class='card-body' style='padding:0px !important;'>"+
+                        "<div class='card col-sm-2 m-2 p-0 pb-4' style='height:20% !important;' onclick='addMenu("+JSON.stringify(value)+")'>"+
+                        "    <img src='{{asset("images")}}/"+value.imageUrl+"' class='card-img-top img-fluid' style='width:100% !important; height:100% !important;'>"+
+                        "    <div class='card-body text-center' style='padding:0px !important;'>"+
                         "       <p class='card-text text-truncate'>"+value.nama+"</p>"+
                         "    </div>"+
                         "</div>";
