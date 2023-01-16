@@ -260,40 +260,40 @@
 
         function drawTableDataPenjualan() {
             tableDataPenjualan = $('#dataPenjualan').DataTable({
-            paging: true,
-            ajax: {
-                url: "{{ route('kasir.show') }}",
-                data:function(params) {
-                    params.status = 0;
+                paging: true,
+                ajax: {
+                    url: "{{ route('kasir.show') }}",
+                    data:function(params) {
+                        params.status = 0;
+                    },
+                    dataSrc: function ( responses ) {
+                        return responses;
+                    },
+                    complete:function(){
+                        $( tableDataPenjualan.column( 3 ).footer() ).html(
+                            totalDataPenjualan
+                        );
+                    }
                 },
-                dataSrc: function ( responses ) {
-                    return responses;
-                },
-                complete:function(){
-                    $( tableDataPenjualan.column( 3 ).footer() ).html(
-                        totalDataPenjualan
-                    );
-                }
-            },
-            columns: [
-                { data: 'idTransaksi' },
-                { data: 'atasNama' },
-                { data: 'created_at' },
-                { data: 'count',class: "text-end"},
-                {
-                    data: "id",
-                    class: "text-end",
-                    render: function ( data, type, row, meta ) {
-                        let action =
-                        '<ul class="navbar-nav">'+
-                        '    <li class="nav-item dropdown">'+
-                        '        <a class="btn btn-info dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">'+
-                        '        </a>'+
-                        '        <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">'+
-                        '        <button type="button" class="dropdown-item" onclick="detailDataPenjualan('+meta.row+')">View</button>'+
-                        '    </li>'+
-                        '</ul>'
-                        ;
+                columns: [
+                    { data: 'idTransaksi' },
+                    { data: 'atasNama' },
+                    { data: 'created_at' },
+                    { data: 'count',class: "text-end"},
+                    {
+                        data: "id",
+                        class: "text-end",
+                        render: function ( data, type, row, meta ) {
+                            let action =
+                            '<ul class="navbar-nav">'+
+                            '    <li class="nav-item dropdown">'+
+                            '        <a class="btn btn-info dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">'+
+                            '        </a>'+
+                            '        <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">'+
+                            '        <button type="button" class="dropdown-item" onclick="detailDataPenjualan('+meta.row+')">View</button>'+
+                            '    </li>'+
+                            '</ul>'
+                            ;
 
                         return action;
                     }
@@ -419,7 +419,7 @@
                     );
                 }
             },
-            columns: [
+            columns: [ 
                 { data: 'idTransaksi' },
                 { data: 'atasNama' },
                 { data: 'nama'},
