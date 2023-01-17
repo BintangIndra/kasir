@@ -91,6 +91,48 @@ class kasir extends Model
             ;
     }
 
+    public function getLaporanTahunan($year){
+        $date = $year.'-01-01 00:00:00';
+        $date1 = $year.'-12-31 00:00:00';
+
+        return DB::table('kasirs')
+            ->select(DB::raw("
+                idTransaksi,
+                atasNama,
+                nomorMeja,
+                kasirs.created_at,
+                SUM(master_data_models.harga * kasirs.jumlah) as count,
+                SUM(master_data_models.harga * kasirs.jumlah / 10) as pajak
+            "))
+            ->join('master_data_models', 'kasirs.masterData', '=', 'master_data_models.id')
+            ->groupBy(DB::raw('MONTH(kasirs.created_at)'))
+            ->where('kasirs.status','=','0')
+            ->whereBetween('kasirs.created_at', [$date, $date1])
+            ->get()
+            ;
+    }
+
+    public function getPopulerItemThisYear()
+    {
+        return DB::table('kasirs')
+            ->select(DB::raw('
+                idTransaksi,
+                jumlah,
+                masterData,
+                status,
+                SUM(jumlah) as total,
+                master_data_models.nama as itemName,
+                master_data_models.jenis as itemType,
+                master_data_models.imageUrl as ImageUrl
+            '))
+            ->join('master_data_models', 'kasirs.masterData', '=', 'master_data_models.id')
+            ->orderBy('jumlah','desc')
+            ->groupBy('masterData')
+            ->take(10)
+            ->get()
+            ;
+    }
+
     public function updateStatus($data){
         $kasir = new kasir;
         $kasir = $kasir->where('idTransaksi', $data)->update(['status' => 0]);

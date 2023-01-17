@@ -73,6 +73,10 @@ class KasirController extends Controller
                 $data['pendapatan'] = kasir::getLaporanBulanan(request()->month)->sum('count');
                 $data['pajak'] = kasir::getLaporanBulanan(request()->month)->sum('pajak');
                 return $data;
+            }elseif(request()->year){
+                return kasir::getLaporanTahunan(request()->year);
+            }elseif(request()->get == 'populer_item'){
+                return kasir::getPopulerItemThisYear();
             }else{
                 return kasir::getAllPesanan(intval(request()->status));
             }

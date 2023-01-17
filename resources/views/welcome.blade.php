@@ -7,6 +7,7 @@
         <script src="{{ asset('jquery.min.js') }}"></script>
         <!-- Scripts -->
         <script src="{{ asset('js/app.js') }}" defer></script>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         <!-- Styles -->
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
         <title>Laravel</title>
@@ -139,6 +140,116 @@
 
     @endauth
     
+    
+    @if(Illuminate\Support\Facades\Route::is('welcome'))
+        <h1 class="ms-3 mt-2">Omset Per Tahun</h1>
+        <div id="chart_omsetPertahun" style="margin: 20px !important"></div>
+        <h1 class="ms-3 mt-2">Items Terlaris</h1>
+        <div id="chart_BarangPalingLaris" style="margin: 20px !important"></div>
+
+        <script>
+            
+            google.charts.load('current', {packages: ['corechart', 'bar']});
+            google.charts.setOnLoadCallback(drawTitleSubtitle);
+
+            function drawTitleSubtitle() {
+
+                $.ajax({
+                    url: "{{ route('kasir.show') }}",
+                    data: {
+                        year : 2022,
+                    },
+                    success:function(datas){
+                        var data = new google.visualization.DataTable();
+                        data.addColumn('string', 'bulan');
+                        data.addColumn('number', 'Omset');
+
+                        $.each(datas, function (key, value) {
+                            data.addRows([
+                                [GetMonthName(parseInt(value.created_at.substring(5,7))),parseInt(value.count)]
+                            ])
+                        })    
+                        
+                        var options = {
+                            chart: {
+                                title: 'Omset bulanan perTahun',
+                            },
+                            hAxis: {
+                                title: 'Time of Day',
+                                format: 'h:mm a',
+                                viewWindow: {
+                                    min: [7, 30, 0],
+                                    max: [17, 30, 0]
+                                }
+                            },
+                            vAxis: {
+                                title: 'Rating (scale of 1-10)'
+                            },
+                            width : $(window).width() - 50,
+                            height : $(window).height() / 2.5
+                        };
+
+                        var materialChart = new google.charts.Bar(document.getElementById('chart_omsetPertahun'));
+                        var formatter = new google.visualization.NumberFormat(
+                            {
+                                fractionDigits:true,
+                                prefix: 'Rp.'
+                            }
+                        );
+                        
+                        formatter.format(data, 1);
+                        materialChart.draw(data, options);
+                    }
+                });
+            }
+
+            google.charts.load('current', {packages: ['corechart', 'bar']});
+            google.charts.setOnLoadCallback(drawBarColors);
+
+            function drawBarColors() {
+                $.ajax({
+                    url: "{{ route('kasir.show') }}",
+                    data: {
+                        get : 'populer_item',
+                    },
+                    success:function(datas){
+                        var data = [['Item','Jumlah']];
+
+                        $.each(datas, function (key, value) {
+                            data.push([value.itemName , parseInt(value.total)])
+                        })
+
+                        var dataBar = google.visualization.arrayToDataTable(data);
+
+                        var options = {
+                            title: '10 Item dengan penjualan terbanyak',
+                            chartArea: {width: '50%'},
+                            colors: ['#b0120a'],
+                            hAxis: {
+                            title: 'Penjualan',
+                            minValue: 0
+                            },
+                            vAxis: {
+                            title: 'Item'
+                            },
+                            width : $(window).width() - 50,
+                            height : $(window).height() / 2.5
+                        };
+
+                        var chart = new google.visualization.BarChart(document.getElementById('chart_BarangPalingLaris'));
+                        chart.draw(dataBar, options);
+    
+                    }
+                });
+            }
+
+            function GetMonthName(monthNumber) {
+                var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+                 'September', 'October', 'November', 'December'];
+                return months[monthNumber - 1];
+            }
+        </script>
+    @endif
 
     </body>
 </html>
