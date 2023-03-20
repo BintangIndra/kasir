@@ -144,7 +144,7 @@
     @if(Illuminate\Support\Facades\Route::is('welcome'))
         <div class="d-flex align-items-center">
             <h1 class="ms-3 mt-2">Omset Per Tahun</h1>
-            <select class="form-select ms-2" style="width: 10% !important; height: 4vh !important" name="yearDashboard" id="yearDashboard">
+            <select class="form-select ms-2" style="width: 10% !important;" name="yearDashboard" id="yearDashboard">
                 <option value="2021">2021</option>
                 <option value="2022" selected>2022</option>
                 <option value="2023">2023</option>
@@ -157,6 +157,9 @@
 
         <script>
 
+            $('#yearDashboard').on('change', function() {
+                drawTitleSubtitle()
+            });
             
             google.charts.load('current', {packages: ['corechart', 'bar']});
             google.charts.setOnLoadCallback(drawTitleSubtitle);
