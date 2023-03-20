@@ -142,12 +142,21 @@
     
     
     @if(Illuminate\Support\Facades\Route::is('welcome'))
-        <h1 class="ms-3 mt-2">Omset Per Tahun</h1>
+        <div class="d-flex align-items-center">
+            <h1 class="ms-3 mt-2">Omset Per Tahun</h1>
+            <select class="form-select ms-2" style="width: 10% !important; height: 4vh !important" name="yearDashboard" id="yearDashboard">
+                <option value="2021">2021</option>
+                <option value="2022" selected>2022</option>
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+            </select>
+        </div>
         <div id="chart_omsetPertahun" style="margin: 20px !important"></div>
         <h1 class="ms-3 mt-2">Items Terlaris</h1>
         <div id="chart_BarangPalingLaris" style="margin: 20px !important"></div>
 
         <script>
+
             
             google.charts.load('current', {packages: ['corechart', 'bar']});
             google.charts.setOnLoadCallback(drawTitleSubtitle);
@@ -157,7 +166,7 @@
                 $.ajax({
                     url: "{{ route('kasir.show') }}",
                     data: {
-                        year : 2022,
+                        year : $('#yearDashboard').val(),
                     },
                     success:function(datas){
                         var data = new google.visualization.DataTable();
