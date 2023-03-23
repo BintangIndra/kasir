@@ -33,7 +33,12 @@ class kasir extends Model
         return DB::table('kasirs')
                     ->select(DB::raw("*,kasirs.id as id"))
                     ->join('master_data_models', 'kasirs.masterData', '=', 'master_data_models.id')
-                    ->where('kasirs.idTransaksi','=',$data)
+                    ->where('kasirs.idTransaksi','=',$data->idTransaksi)
+                    ->when(isset($data->status), function ($query) {
+                        return $query->where('kasirs.status', 0);
+                    }, function ($query) {
+                        return $query->where('kasirs.status', 1);
+                    })
                     ->get();
     }
 
@@ -47,7 +52,7 @@ class kasir extends Model
 
     public function getLaporanPenjualan($data){
         $date = $data['date'] == null ? date('Y-m-d'): $data['date'].' 00:00:00';
-        $date1 = $data['date1'] == null ? date('Y-m-d'): $data['date1'].' 00:00:00';
+        $date1 = $data['date1'] == null ? date('Y-m-d'): $data['date1'].' 12:00:00';
         // dd($date,$date1);
         $kasir = new kasir;
         switch ($data['getBy']) {
@@ -74,15 +79,17 @@ class kasir extends Model
             default:
                 $kasir = [];
         }
+
         return $kasir;
     }
 
     public function getLaporanBulanan($month){
         $date = $month == null ? date('Y-m-d'): $month.'-01 00:00:00';
-        $date1 = $month == null ? date('Y-m-d'): date("Y-m-d", strtotime($month."next month last day")).' 00:00:00';
-
+        $date1 = $month == null ? date('Y-m-d'): date("Y-m-d", strtotime($month."next month last day")).' 12:00:00';
         return DB::table('kasirs')
-            ->select(DB::raw("idTransaksi,atasNama,nomorMeja,kasirs.created_at,SUM(master_data_models.harga * kasirs.jumlah) as count,SUM(master_data_models.harga * kasirs.jumlah / 10) as pajak"))
+            ->select(DB::raw("idTransaksi,atasNama,nomorMeja,kasirs.created_at,
+            SUM(master_data_models.harga * kasirs.jumlah) as count,
+            SUM(master_data_models.harga * kasirs.jumlah / 10) as pajak"))
             ->join('master_data_models', 'kasirs.masterData', '=', 'master_data_models.id')
             ->groupBy('idTransaksi')
             ->where('kasirs.status','=','0')

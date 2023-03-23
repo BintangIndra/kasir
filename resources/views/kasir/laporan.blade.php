@@ -338,6 +338,7 @@
                 url: "{{ route('kasir.show') }}",
                 data: {
                     idTransaksi : row.idTransaksi,
+                    status : 0
                 },
                 success:function(data){
                     $.each(data, function( index, value ) {
@@ -409,7 +410,7 @@
                 },
                 dataSrc: function ( responses ) {
                     $.each(responses,function( index, value ){
-                        totalLaporanPenjualan += parseInt(value.harga);
+                        totalLaporanPenjualan += parseInt(value.harga * value.jumlah);
                     });
                     return responses;
                 },
@@ -423,7 +424,14 @@
                 { data: 'idTransaksi' },
                 { data: 'atasNama' },
                 { data: 'nama'},
-                { data: 'harga'},
+                { data: 'harga',
+                  render : function(data, type, row, meta) {
+                        var harga = parseFloat(data);
+                        var jumlah = parseFloat(row.jumlah);
+                        var total = harga * jumlah;
+                        return total;
+                    }
+                },
                 { data: 'created_at' },
                 {
                     data: "id",
@@ -435,7 +443,7 @@
                         '        <a class="btn btn-info dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">'+
                         '        </a>'+
                         '        <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">'+
-                        '        <button type="button" class="dropdown-item" onclick="detailDataPenjualan('+meta.row+')">View</button>'+
+                        '        <button type="button" class="dropdown-item" onclick="detailLaporanPenjualan('+meta.row+')">View</button>'+
                         '    </li>'+
                         '</ul>'
                         ;
@@ -445,6 +453,64 @@
                 },
             ],
         });
+        }
+
+        function detailLaporanPenjualan(data){
+            let row = tableLaporanPenjualan.row(data).data();
+            let contentview = 
+            '<div id="tablePesanan" class="container-fluid"><table class="table table-responsive" style="color:white;">'+
+                '<tr>'+
+                    '<th>'+
+                        '<p>NAMA</p>'+
+                    '</th>'+
+                    '<th class="text-center">'+
+                        '<p>JUMLAH</p>'+
+                    '</th>'+
+                    '<th class="text-end">'+
+                        '<p>HARGA</p>'+
+                    '</th>'+
+                '</tr>';
+
+            $.ajax({
+                url: "{{ route('kasir.show') }}",
+                data: {
+                    idTransaksi : row.idTransaksi,
+                    status : 0
+                },
+                success:function(data){
+                    $.each(data, function( index, value ) {
+                    contentview +=
+                        '<tr>'+
+                            '<td>'+
+                                '<p>'+value.nama+'</p>'+
+                            '</td>'+
+                            '<td class="text-center">'+
+                                '<p>'+value.jumlah+'</p>'+
+                            '</td>'+
+                            '<td class="text-end">'+
+                                '<p>Rp.'+value.jumlah * value.harga+'</p>'+
+                            '</td>'+
+                        '</tr>';
+                    });
+                },
+                complete:function(){
+                    contentview += 
+                            '</table></div>';
+                    
+                    var footer = '<div>'+
+                            '<button class="btn btn-light me-1" onclick="print(\'tablePesanan\')">Print</button>'+
+                        '</div>';
+
+                    var html = modal.replace('++++', contentview);
+                    var html = html.replace('////', 'Pesanan '+row.atasNama);
+                    var html = html.replace('????', footer);
+                    var html = html.replace('0000', row.idTransaksi);
+                    
+                    $('#modalview').html(html);
+                    
+                    $('#Modalview').modal('show');
+                }
+            });
         }
 
         function renderLaporanBulanan() {

@@ -23,8 +23,6 @@
                 <div class="ms-1">
                     <p style="margin:0 !important">Total :</p>
                     <p id="totalBayar" data-total="0" style="margin:0 !important">0</p>
-                    <p>Diskon :</p>
-                    <input type="number" class="form-control">
                 </div>
                 <button type="button" class="btn btn-info mb-1" data-bs-toggle="modal" data-bs-target="#saveMenu">Simpan</button>
             </div>

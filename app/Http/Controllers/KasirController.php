@@ -66,7 +66,7 @@ class KasirController extends Controller
     {   
         if (request()->ajax()) {
             if(request()->idTransaksi){
-                return kasir::getPesananByID(request()->idTransaksi);
+                return kasir::getPesananByID(request());
             }elseif(request()->laporanPenjualan){
                 return kasir::getLaporanPenjualan(request()->all());
             }elseif(request()->month){
