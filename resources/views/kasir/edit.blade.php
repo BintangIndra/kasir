@@ -20,7 +20,6 @@
             <tr>
                 <th>ID Transaksi</th>
                 <th>Atas Nama</th>
-                <th>Nomor Meja</th>
                 <th class="text-end">Total</th>
                 <th style="max-width: 20px !important;">Action</th>
             </tr>
@@ -280,7 +279,6 @@
         columns: [
             { data: 'idTransaksi' },
             { data: 'atasNama' },
-            { data: 'nomorMeja' },
             { data: 'count',class: "text-end"},
             {
                 data: "id",

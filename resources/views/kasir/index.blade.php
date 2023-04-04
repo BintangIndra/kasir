@@ -37,10 +37,6 @@
                 <label for="atasNama" class="form-label">Atas Nama</label>
                 <input type="text" class="form-control" id="atasNama" placeholder="atasNama">
             </div>
-            <div class="mb-3 col-sm-12">
-                <label for="nomorMeja" class="form-label">Nomor Meja</label>
-                <input type="Number" class="form-control" id="nomorMeja" placeholder="0">
-            </div>
             <button class="btn btn-info" onclick="saveMenu()">Simpan</button>
         </div>';
     @endphp
@@ -149,7 +145,6 @@
                 method: 'POST',
                 data: {
                     atasNama: $('#atasNama').val(),
-                    nomorMeja: $('#nomorMeja').val(),
                     listMenu: menu
                 },
                 success: function(data){
@@ -158,7 +153,6 @@
                     drawmenu();
                     $('#totalBayar').html('0');
                     $('#atasNama').val('');
-                    $('#nomorMeja').val('');
                     $('#saveMenu').modal('hide');
                 }
             });

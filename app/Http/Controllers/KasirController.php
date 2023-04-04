@@ -47,7 +47,7 @@ class KasirController extends Controller
             $kasir->masterData = $data['id'];
             $kasir->idTransaksi = $idTransaksi;
             $kasir->atasNama = $request->atasNama;
-            $kasir->nomorMeja = $request->nomorMeja;
+            $kasir->nomorMeja = 0;
             $kasir->jumlah = $data['jumlah'];
             $kasir->status = 1;
             $kasir->save();
@@ -120,7 +120,7 @@ class KasirController extends Controller
                 $kasir->masterData = substr($key, 3);
                 $kasir->idTransaksi = $id;
                 $kasir->atasNama = $dataTransaksi[0]->atasNama;
-                $kasir->nomorMeja = $dataTransaksi[0]->nomorMeja;
+                $kasir->nomorMeja = 0;
                 $kasir->jumlah = $value;
                 $kasir->status = 1;
                 $kasir->save();
