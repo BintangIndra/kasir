@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\masterDataModel;
 use App\Http\Requests\StoremasterDataModelRequest;
 use App\Http\Requests\UpdatemasterDataModelRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class MasterDataModelController extends Controller
 {
@@ -15,7 +17,16 @@ class MasterDataModelController extends Controller
      */
     public function index()
     {
-        //
+        if (request()->ajax()) {
+            if(request()->jenis_makanan && request()->jenis_makanan != 'all'){
+                return masterDataModel::getByJenis(request()->jenis_makanan);
+            }elseif(request()->getjenis){
+                return masterDataModel::getJenis(request()->jenis);
+            }
+            return masterDataModel::all();
+        }
+        
+        return  view('masterData.index');
     }
 
     /**
@@ -34,9 +45,32 @@ class MasterDataModelController extends Controller
      * @param  \App\Http\Requests\StoremasterDataModelRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoremasterDataModelRequest $request)
-    {
-        //
+    public function store(Request $request)
+    {   
+        $validatedData = $request->validate([
+            'file' => 'required|mimes:jpg,bmp,png,jpeg|max:2048',
+            'name' => 'required',
+            'jenis' => 'required',
+            'harga' => 'required',
+        ]);
+
+        // $name = $request->file('file')->hashName();
+ 
+        // $path = $request->file('file')->store('public/masterData/images');
+
+        $imageName = $request->file('file')->hashName();
+        $request->file->move(public_path('images'), $imageName);
+
+        $masterDataModel = new masterDataModel;
+        $masterDataModel->nama = $request->name;
+        $masterDataModel->jenis = $request->jenis;
+        $masterDataModel->harga = $request->harga;
+        $masterDataModel->imageUrl = $imageName;
+        $masterDataModel->save();
+
+        return  view('masterData.index');
+
+        
     }
 
     /**
@@ -58,7 +92,7 @@ class MasterDataModelController extends Controller
      */
     public function edit(masterDataModel $masterDataModel)
     {
-        //
+        
     }
 
     /**
@@ -68,9 +102,39 @@ class MasterDataModelController extends Controller
      * @param  \App\Models\masterDataModel  $masterDataModel
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatemasterDataModelRequest $request, masterDataModel $masterDataModel)
+    public function update(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'jenis' => 'required',
+            'harga' => 'required',
+        ]);
+
+        $masterDataModel = new masterDataModel;
+        $masterDataModel = $masterDataModel->find($request->id);
+
+        if($request->file == ''){
+            $masterDataModel->nama = $request->name;
+            $masterDataModel->jenis = $request->jenis;
+            $masterDataModel->harga = $request->harga;
+            $masterDataModel->save();
+
+            return  view('masterData.index');
+        }else{
+            $imageName = $masterDataModel->imageUrl;
+            unlink(public_path('images').'/'.$imageName);
+
+            $imageName = $request->file('file')->hashName();
+            $request->file->move(public_path('images'), $imageName);
+
+            $masterDataModel->nama = $request->name;
+            $masterDataModel->jenis = $request->jenis;
+            $masterDataModel->harga = $request->harga;
+            $masterDataModel->imageUrl = $imageName;
+            $masterDataModel->save();
+
+            return  view('masterData.index');
+        }
     }
 
     /**
@@ -79,8 +143,14 @@ class MasterDataModelController extends Controller
      * @param  \App\Models\masterDataModel  $masterDataModel
      * @return \Illuminate\Http\Response
      */
-    public function destroy(masterDataModel $masterDataModel)
-    {
-        //
+    public function destroy($id)
+    {   
+        $masterDataModel = new masterDataModel;
+        $masterDataModel = $masterDataModel->find($id);
+        $imageName = $masterDataModel->imageUrl;
+        unlink(public_path('images').'/'.$imageName);
+        $masterDataModel->delete();
+        
+        return  view('masterData.index');
     }
 }

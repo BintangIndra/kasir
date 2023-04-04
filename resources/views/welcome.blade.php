@@ -3,19 +3,43 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}" />
+        <script src="{{ asset('jquery.min.js') }}"></script>
         <!-- Scripts -->
         <script src="{{ asset('js/app.js') }}" defer></script>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         <!-- Styles -->
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
         <title>Laravel</title>
+        
+        @stack('scripts')
 
         <style>
             body {
                 font-family: 'Nunito', sans-serif;
             }
+            
+            table,th,td{
+                border: 0.5px solid;border-color:teal;background-color:black;
+            }
+    
+            .dataTables_length{
+                text-align:start !important;
+            }
+            .dataTables_filter{
+                text-align:end !important;
+            }
+
+            .nav-link{
+                color:white !important;
+            }
+            .nav-link.active{
+                /* background-color: #0dcaf0 !important; */
+                color:#0dcaf0 !important;
+            }
         </style>
     </head>
-    <body>
+    <body style="background-color:#04293A;color:aliceblue;">
     @guest
         <div class="container d-flex align-items-center justify-content-center" style="height: 100vh;">
             <div class="row h-25 w-50">
@@ -63,7 +87,7 @@
     @endguest
 
     @auth
-    <nav class="navbar navbar-expand-lg bg-light">
+    <nav class="navbar navbar-expand-lg bg-info">
         <div class="container-fluid d-flex justify-content-between">
             <button class="btn btn-light" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-border-width" viewBox="0 0 16 16">
@@ -80,23 +104,10 @@
         </div>
     </nav>
 
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-body d-flex justify-content-center">
-            Yakin Mau Logout
-            </div>
-            <div class="modal-footer d-flex justify-content-center">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <a href="{{ route('logout') }}" class="btn btn-danger">Yes</a>
-            </div>
-        </div>
-        </div>
-    </div>
+    <x-alert content="Yakin Mau Keluar?" :route="route('logout')" id="exampleModal" size="sm" />
     
     <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-        <div class="offcanvas-header">
+        <div class="offcanvas-header" style="background-color:#04293A;">
             <h5 class="offcanvas-title" id="offcanvasExampleLabel">Menus</h5>
             <button type="button" data-bs-dismiss="offcanvas" aria-label="Close">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
@@ -104,33 +115,153 @@
                   </svg>
             </button>
         </div>
-        <div class="offcanvas-body">
-            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+        <div class="offcanvas-body" style="background-color:#04293A;">
+            <ul class="navbar-nav justify-content-end flex-grow-1 pe-3" style="color:white;">
                 <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="{{ route('welcome') }}">Home</a>
+                  <a class="active nav-link" aria-current="page" href="{{ route('welcome') }}">Home</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#">Link</a>
+                  <a class="nav-link" href="{{ route('masterData.index') }}">Master Data</a>
                 </li>
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Dropdown
-                  </a>
-                  <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li>
-                      <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                  </ul>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('kasir.index') }}">Kasir</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('kasir.edit') }}">Pesanan</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('kasir.laporan') }}">Laporan</a>
                 </li>
             </ul>
         </div>
     </div>
-    
+
+    @yield('content')
+
     @endauth
     
+    
+    @if(Illuminate\Support\Facades\Route::is('welcome'))
+        <div class="d-flex align-items-center">
+            <h1 class="ms-3 mt-2">Omset Per Tahun</h1>
+            <select class="form-select ms-2" style="width: 10% !important;" name="yearDashboard" id="yearDashboard">
+                <option value="2021">2021</option>
+                <option value="2022" selected>2022</option>
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+            </select>
+        </div>
+        <div id="chart_omsetPertahun" style="margin: 20px !important"></div>
+        <h1 class="ms-3 mt-2">Items Terlaris</h1>
+        <div id="chart_BarangPalingLaris" style="margin: 20px !important"></div>
+
+        <script>
+
+            $('#yearDashboard').on('change', function() {
+                drawTitleSubtitle()
+            });
+            
+            google.charts.load('current', {packages: ['corechart', 'bar']});
+            google.charts.setOnLoadCallback(drawTitleSubtitle);
+
+            function drawTitleSubtitle() {
+
+                $.ajax({
+                    url: "{{ route('kasir.show') }}",
+                    data: {
+                        year : $('#yearDashboard').val(),
+                    },
+                    success:function(datas){
+                        var data = new google.visualization.DataTable();
+                        data.addColumn('string', 'bulan');
+                        data.addColumn('number', 'Omset');
+
+                        $.each(datas, function (key, value) {
+                            data.addRows([
+                                [GetMonthName(parseInt(value.created_at.substring(5,7))),parseInt(value.count)]
+                            ])
+                        })    
+                        
+                        var options = {
+                            chart: {
+                                title: 'Omset bulanan perTahun',
+                            },
+                            hAxis: {
+                                title: 'Time of Day',
+                                format: 'h:mm a',
+                                viewWindow: {
+                                    min: [7, 30, 0],
+                                    max: [17, 30, 0]
+                                }
+                            },
+                            vAxis: {
+                                title: 'Rating (scale of 1-10)'
+                            },
+                            width : $(window).width() - 50,
+                            height : $(window).height() / 2.5
+                        };
+
+                        var materialChart = new google.charts.Bar(document.getElementById('chart_omsetPertahun'));
+                        var formatter = new google.visualization.NumberFormat(
+                            {
+                                fractionDigits:true,
+                                prefix: 'Rp.'
+                            }
+                        );
+                        
+                        formatter.format(data, 1);
+                        materialChart.draw(data, options);
+                    }
+                });
+            }
+
+            google.charts.load('current', {packages: ['corechart', 'bar']});
+            google.charts.setOnLoadCallback(drawBarColors);
+
+            function drawBarColors() {
+                $.ajax({
+                    url: "{{ route('kasir.show') }}",
+                    data: {
+                        get : 'populer_item',
+                    },
+                    success:function(datas){
+                        var data = [['Item','Jumlah']];
+
+                        $.each(datas, function (key, value) {
+                            data.push([value.itemName , parseInt(value.total)])
+                        })
+
+                        var dataBar = google.visualization.arrayToDataTable(data);
+
+                        var options = {
+                            title: '10 Item dengan penjualan terbanyak',
+                            chartArea: {width: '50%'},
+                            colors: ['#b0120a'],
+                            hAxis: {
+                            title: 'Penjualan',
+                            minValue: 0
+                            },
+                            vAxis: {
+                            title: 'Item'
+                            },
+                            width : $(window).width() - 50,
+                            height : $(window).height() / 2.5
+                        };
+
+                        var chart = new google.visualization.BarChart(document.getElementById('chart_BarangPalingLaris'));
+                        chart.draw(dataBar, options);
+    
+                    }
+                });
+            }
+
+            function GetMonthName(monthNumber) {
+                var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+                 'September', 'October', 'November', 'December'];
+                return months[monthNumber - 1];
+            }
+        </script>
+    @endif
 
     </body>
 </html>

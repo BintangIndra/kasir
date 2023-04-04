@@ -13,11 +13,12 @@ class CreateMasterDataModelsTable extends Migration
      */
     public function up()
     {
-        Schema::create('masterData', function (Blueprint $table) {
+        Schema::create('master_data_models', function (Blueprint $table) {
             $table->id();
             $table->integer('harga');
-            $table->string('nama',25);
+            $table->string('nama',255);
             $table->string('jenis',25);
+            $table->string('imageUrl',255);
             $table->timestamps();
         });
     }
