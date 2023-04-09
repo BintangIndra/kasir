@@ -38,9 +38,14 @@ class KasirController extends Controller
      */
     public function store(StorekasirRequest $request)
     {
-        $count = kasir::select('idTransaksi')->where('idTransaksi', 'like','%001'.date('dmY'))->groupBy('idTransaksi')->get()->count();
+        $count = kasir::select('idTransaksi')
+                ->where('idTransaksi', 'like','%001'.date('dmY'))
+                ->groupBy('idTransaksi')
+                ->orderBy('created_at', 'desc')
+                ->get();
+        $lastId = $count->first()->idTransaksi;
 
-        $idTransaksi = str_pad(strval($count+1),4,'0',STR_PAD_LEFT).'001'.date('dmY');
+        $idTransaksi = str_pad(strval(substr($lastId, 0, 4)+1),4,'0',STR_PAD_LEFT).'001'.date('dmY');
 
         foreach($request->listMenu as $data){
             $kasir = new kasir;

@@ -65,7 +65,7 @@
         dataCategory(true);
         dataCard('all');
         
-        var content = '<div class="col-sm-12"><button class="btn btn-info m-1" onclick="dataCard(\'all\')">Semua</button>';
+        var content = '<div class="col-sm-12 btn-group"><button class="btn btn-info m-1 custom-btn" style="height:30px;" id="all" onclick="dataCard(\'all\')">Semua</button>';
 
         function dataCategory(data){
             $.ajax({
@@ -76,7 +76,7 @@
                 success:function(data){        
                     $.each(data, function( index, value ) {
                         content +=
-                        '<button class="btn btn-info m-1" onclick="dataCard(\''+value.jenis+'\')">'+value.jenis+'</button>';
+                        '<button class="btn btn-info m-1 custom-btn" style="height:30px;" id="'+value.jenis+'" onclick="dataCard(\''+value.jenis+'\')">'+value.jenis+'</button>';
                     });
 
                     content += '</div>';
@@ -90,9 +90,9 @@
                 data: {
                     jenis_makanan : data
                 },
-                success:function(data){
+                success:function(datas){
                     var cardcontent = '';
-                    $.each(data, function( index, value ) {
+                    $.each(datas, function( index, value ) {
                         cardcontent +=
                         "<div class='card col-sm-2 m-2 p-0 pb-4' style='height:20% !important;' onclick='addMenu("+JSON.stringify(value)+")'>"+
                         "    <img src='{{asset("images")}}/"+value.imageUrl+"' class='card-img-top img-fluid' style='width:100% !important; height:100% !important;'>"+
@@ -103,6 +103,8 @@
                     });
 
                     $('#dataCard').html(content + cardcontent);
+                    $('#'+data).css("background-color", "#FF69B4");
+                    $('#'+data).css("border-color", "#FF69B4");
                 }
             });
         };
@@ -176,6 +178,7 @@
                     $('#saveMenu').modal('hide');
                     $('#ambilSekarang').prop('checked', false);
                     $('#tanggalAmbil').val('');
+                    $('#totalBayar').data("total",0);
                 }
             });
         }

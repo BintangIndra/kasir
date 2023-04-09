@@ -376,7 +376,6 @@
                     var html = modal.replace('++++', contentview);
                     var html = html.replace('////', 'Pesanan '+row.atasNama);
                     var html = html.replace('????', footer);
-                    var html = html.replace('0000', row.idTransaksi);
                     
                     $('#modalview').html(html);
                     
@@ -504,7 +503,6 @@
                     var html = modal.replace('++++', contentview);
                     var html = html.replace('////', 'Pesanan '+row.atasNama);
                     var html = html.replace('????', footer);
-                    var html = html.replace('0000', row.idTransaksi);
                     
                     $('#modalview').html(html);
                     
