@@ -15,6 +15,7 @@ class kasir extends Model
         'idTransaksi',// '000100110122014'
         'atasNama',
         'nomorMeja',
+        'tanggalAmbil',
         'id',
         'jumlah',
         'status'

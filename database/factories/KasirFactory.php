@@ -31,6 +31,8 @@ class KasirFactory extends Factory
             'nomorMeja' => $this->faker->randomNumber(1, true),
             'jumlah' => $this->faker->randomNumber(2, true),
             'status' => $this->faker->randomElement([0,1]),
+            'status' => $this->faker->randomElement([0,1]),
+            'tanggalAmbil' => $faker->dateTimeBetween('2022-01-01', '2025-03-31')
         ];
     }
 }

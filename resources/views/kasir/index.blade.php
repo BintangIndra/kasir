@@ -37,6 +37,16 @@
                 <label for="atasNama" class="form-label">Atas Nama</label>
                 <input type="text" class="form-control" id="atasNama" placeholder="atasNama">
             </div>
+            <div class="mb-3 col-sm-12">
+                <label for="tanggalAmbil">Tanggal Pengambilan</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="ambilSekarang">
+                    <label class="form-check-label" for="ambilSekarang">
+                        Ambil Hari ini
+                    </label>
+                </div>
+                <input type="date" id="tanggalAmbil" class="form-control">
+            </div>
             <button class="btn btn-info" onclick="saveMenu()">Simpan</button>
         </div>';
     @endphp
@@ -44,6 +54,14 @@
     <x-modal :content="$contentcreate" id="saveMenu" title="Tambah Pesanan" footer=""/>
     
     <script>
+
+        $('#ambilSekarang').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#tanggalAmbil').css('display','none')
+            } else {
+                $('#tanggalAmbil').css('display','inline')
+            }
+        });
         dataCategory(true);
         dataCard('all');
         
@@ -145,6 +163,8 @@
                 method: 'POST',
                 data: {
                     atasNama: $('#atasNama').val(),
+                    tanggalAmbil: $('#tanggalAmbil').val(),
+                    ambilSekarang: $('#ambilSekarang').is(':checked'),
                     listMenu: menu
                 },
                 success: function(data){
@@ -154,6 +174,8 @@
                     $('#totalBayar').html('0');
                     $('#atasNama').val('');
                     $('#saveMenu').modal('hide');
+                    $('#ambilSekarang').prop('checked', false);
+                    $('#tanggalAmbil').val('');
                 }
             });
         }

@@ -50,6 +50,7 @@ class KasirController extends Controller
             $kasir->nomorMeja = 0;
             $kasir->jumlah = $data['jumlah'];
             $kasir->status = 1;
+            $kasir->tanggalAmbil = $request->tanggalAmbil;
             $kasir->save();
         }
 

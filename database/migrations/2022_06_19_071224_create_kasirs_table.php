@@ -21,6 +21,7 @@ class CreateKasirsTable extends Migration
             $table->tinyInteger('nomorMeja');
             $table->integer('jumlah');
             $table->boolean('status');
+            $table->date('tanggalDiambil');
             $table->timestamps();
         });
     }
