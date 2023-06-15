@@ -171,13 +171,13 @@
                 
                 var footer = '<div>'+
                         '<button class="btn btn-light me-1" onclick="print()">Print</button>'+
-                        '<a href="{{ route("kasir.bayar",'0000') }}" class="btn btn-info">Bayar</a>'+
+                        '<a href="{{ route("kasir.bayar",'&&&&') }}" class="btn btn-info">Bayar</a>'+
                     '</div>';
 
                 var html = modal.replace('++++', contentview);
                 var html = html.replace('////', 'Pesanan '+row.atasNama);
                 var html = html.replace('????', footer);
-                var html = html.replace('0000', row.idTransaksi);
+                var html = html.replace('&&&&', row.idTransaksi);
                 
                 $('#modalview').html(html);
                 
@@ -238,7 +238,7 @@
                 var html = modalEdit.replace('++++', contentview);
                 var html = html.replace('////', 'Pesanan '+row.atasNama);
                 var html = html.replace('????', footer);
-                var html = html.replace('0000', row.idTransaksi);
+                var html = html.replace('&&&&', row.idTransaksi);
                 var html = html.replace('@@@@', row.idTransaksi);
                 
                 $('#modaleditdiv').html(html);
