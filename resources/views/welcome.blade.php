@@ -141,7 +141,7 @@
     @endauth
     
     
-    @if(Illuminate\Support\Facades\Route::is('welcome'))
+    @if(Illuminate\Support\Facades\Route::is('welcome') && auth()->check())
         <div class="d-flex align-items-center">
             <h1 class="ms-3 mt-2">Omset Per Tahun</h1>
             <select class="form-select ms-2" style="width: 10% !important;" name="yearDashboard" id="yearDashboard">
